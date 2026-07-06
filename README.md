@@ -7,8 +7,11 @@ existing Feather so it stops updating to Dawn and turns ads off.
 
   >> If Feather is already gone / became Dawn, this script can't
      help - There will be a (zip) version soon instead, which ships the
-     actual Feather app.
+     actual Feather app. BUT YOU MAY STILL BE ABLE TO GET THE FEATHER INSTALL
 
+Run 
+```%LOCALAPPDATA%\feather-updater```
+In explorer or the run window, there should be a installer.exe from feather, install it and run the patch
 --------------------------------------------------------------------
 HOW TO RUN
 --------------------------------------------------------------------
@@ -38,5 +41,5 @@ expected - allow/restore it if needed.
 
 UPDATES ARE OFF ON PURPOSE: that's what blocks Dawn, but it also
 means Feather won't get NEW Minecraft versions. For the newest
-Minecraft or Forge/NeoForge, use a launcher like Prism.
+Minecraft use a launcher like Prism.
 ====================================================================
