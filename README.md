@@ -1,6 +1,5 @@
-====================================================================
-  PATCH FEATHER  -  SCRIPT VERSION  (small, patches your install)
-====================================================================
+PATCH FEATHER  -  SCRIPT VERSION  (small, patches your install)
+
 
 Use this ONLY if you still have the Feather launcher installed
 (i.e. it hasn't already turned into "Dawn"). It patches your
