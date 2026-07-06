@@ -6,7 +6,7 @@ Use this ONLY if you still have the Feather launcher installed
 existing Feather so it stops updating to Dawn and turns ads off.
 
   >> If Feather is already gone / became Dawn, this script can't
-     help - use the FOLDER (zip) version instead, which ships the
+     help - There will be a (zip) version soon instead, which ships the
      actual Feather app.
 
 --------------------------------------------------------------------
