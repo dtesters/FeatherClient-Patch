@@ -25,8 +25,7 @@ No administrator rights are needed.
 --------------------------------------------------------------------
 WHAT IT DOES  /  NOTES
 --------------------------------------------------------------------
-- Disables the auto-update to Dawn, turns ads off, sets the year to
-  2026, and enables DevTools (Ctrl+Shift+I).
+- Disables the auto-update to Dawn, turns ads off, changes the copyright year shown in the launcher's footer to 2026, and enables DevTools (Ctrl+Shift+I).
 - It BACKS UP the originals first as:
     "Feather Launcher.exe.featherfix.bak"  and
     "resources\app.asar.featherfix.bak"
