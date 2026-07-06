@@ -10,18 +10,18 @@ A small Windows script that patches an **existing** Feather Client launcher so i
 
 It applies these edits to your installed Feather launcher:
 
-- **Blocks the auto-update to Dawn** — the launcher stops replacing itself.
-- **Disables ads** — no ad bar, no ad panel.
-- **Enables DevTools** — open with `Ctrl+Shift+I`.
-- **Sets the copyright year in the launcher's footer to 2026** — cosmetic text only; it does **not** change your system clock or any time settings.
-- **Disables the Electron asar-integrity fuse** — required so the modified launcher is allowed to load.
+- **Blocks the auto-update to Dawn** the launcher stops replacing itself.
+- **Disables ads** no ad bar, no ad panel.
+- **Enables DevTools** open with `Ctrl+Shift+I`.
+- **Sets the copyright year in the launcher's footer to 2026** cosmetic text only.
+- **Disables the Electron asar-integrity fuse** required so the modified launcher is allowed to load.
 
 All edits are same-length, in-place changes to files you already have. Nothing is downloaded.
 
 ## Requirements
 
 - Windows
-- Feather must **still be installed** at `%LOCALAPPDATA%\Programs\feather`.
+- Feather must **still be installed** at `%LOCALAPPDATA%\Programs\feather`
 
 If your launcher has **already turned into Dawn**, the script has nothing to patch on its own but you may be able to get Feather back first (see the next section). This repository does not distribute the Feather program files themselves.
 
