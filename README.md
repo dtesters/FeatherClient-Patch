@@ -5,10 +5,12 @@
 >
 > Feather's version server (`game-launcher.feathermc.com`) was shut down, so patched launchers suddenly showed **no Minecraft versions and no Play button**. Your install wasn't broken; the list it downloads at startup was gone.
 >
-> The patch now points Feather at a working copy of that same version list (publicly re-hosted by Dawn in the identical format). **If you patched before this fix**, either download this repo again and re-run `Patch Feather.bat`, or just run this once in a terminal and reopen Feather:
+> Dawn still publishes the same version list, but its version files now contain `linux-arm` entries that Feather's last launch engine can't read, so pointing Feather straight at Dawn brings the versions back yet **every launch crashes** at "Loading version". This repo now hosts a cleaned copy (in [`index/`](index/)) that a GitHub Action rebuilds from Dawn every 6 hours, so new versions keep appearing. It also lifts Feather's frozen list of allowed versions, which unlocks newer versions such as 26.3 plus Dawn's Forge/NeoForge builds.
+>
+> **If you patched before this fix** (including the earlier Dawn-URL version of it), download this repo again and re-run `Patch Feather.bat`, or run this once in a terminal and reopen Feather:
 >
 > ```
-> setx VERSION_INDEX "https://api.dawn.gg/v2/deployments/game/stable/version_index.json"
+> setx VERSION_INDEX "https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/index/version_index.json"
 > ```
 
 A small Windows script that patches an **existing** Feather Client launcher so it keeps working as **Feather** instead of auto-migrating to the new **"Dawn"** client and turns off ads while it's at it.
@@ -26,7 +28,8 @@ It applies these edits to your installed Feather launcher:
 - **Enables DevTools** open with `Ctrl+Shift+I`.
 - **Sets the copyright year in the launcher's footer to 2026** cosmetic text only.
 - **Disables the Electron asar-integrity fuse** required so the modified launcher is allowed to load.
-- **Restores the Minecraft version list** by setting a per-user environment variable, `VERSION_INDEX`, to a working copy of Feather's version list (see the update note above).
+- **Restores the Minecraft version list** by setting a per-user environment variable, `VERSION_INDEX`, to this repo's cleaned, auto-updated version list (see the update note above).
+- **Removes Feather's frozen version allow-list check**, so versions released after Feather was abandoned can be launched.
 
 The launcher edits are same-length, in-place changes to files you already have. The script itself downloads nothing; Feather then fetches its version list and game files as usual.
 

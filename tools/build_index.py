@@ -1,0 +1,67 @@
+"""Build a Feather-compatible version index from Dawn's public one.
+
+Dawn re-hosts Feather's version index in the same format, but its manifests now
+include `linux-arm` native libraries, an OS value the last Feather launch engine
+doesn't know, so it refuses to parse them. This script mirrors the index and
+manifests with those entries stripped and recomputes sha1/size.
+
+usage: build_index.py OUT_DIR BASE_URL
+  OUT_DIR   folder to write version_index.json and manifests/<name>.json into
+  BASE_URL  URL prefix the manifests will be served from, e.g.
+            file:///C:/Users/me/AppData/Roaming/.feather/dawn-index
+            https://raw.githubusercontent.com/user/repo/main/index
+"""
+import hashlib, json, os, sys, urllib.request
+
+SOURCE = "https://api.dawn.gg/v2/deployments/game/stable/version_index.json"
+KNOWN_OS = {"windows", "windows-arm", "windows_intel_legacy", "linux", "osx", "osx-arm"}
+
+
+def fetch(url):
+    req = urllib.request.Request(url, headers={"User-Agent": "FeatherClient-Patch"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return r.read()
+
+
+def clean(manifest):
+    removed = 0
+    for lib in manifest.get("native_libraries", []):
+        natives = lib.get("natives", {})
+        for os_name in [k for k in natives if k not in KNOWN_OS]:
+            del natives[os_name]
+            removed += 1
+    for lib in manifest.get("libraries", []):
+        rules = lib.get("rules")
+        if not rules:
+            continue
+        kept = [r for r in rules if r.get("os", {}).get("name") in (None, *KNOWN_OS)]
+        removed += len(rules) - len(kept)
+        lib["rules"] = kept
+    return removed
+
+
+def main():
+    out_dir, base = sys.argv[1], sys.argv[2].rstrip("/")
+    os.makedirs(os.path.join(out_dir, "manifests"), exist_ok=True)
+    index = json.loads(fetch(SOURCE))
+    for entry in index["metadata"]:
+        name = entry["name"]
+        raw = fetch(entry["info"]["url"])
+        if hashlib.sha1(raw).hexdigest() != entry["info"]["sha1"]:
+            sys.exit(f"sha1 mismatch for {name}; aborting")
+        manifest = json.loads(raw)
+        removed = clean(manifest)
+        data = json.dumps(manifest, separators=(",", ":")).encode()
+        with open(os.path.join(out_dir, "manifests", f"{name}.json"), "wb") as f:
+            f.write(data)
+        entry["download_size"] = len(data)
+        entry["info"]["sha1"] = hashlib.sha1(data).hexdigest()
+        entry["info"]["url"] = f"{base}/manifests/{name}.json"
+        print(f"{name:20} stripped {removed}")
+    with open(os.path.join(out_dir, "version_index.json"), "w") as f:
+        json.dump(index, f, separators=(",", ":"))
+    print(f"wrote {len(index['metadata'])} versions to {out_dir}")
+
+
+if __name__ == "__main__":
+    main()
