@@ -1,5 +1,16 @@
 # Feather Client Patch
 
+> [!IMPORTANT]
+> **Update (October 2026): missing Play button / no Minecraft versions — fixed.**
+>
+> Feather's version server (`game-launcher.feathermc.com`) was shut down, so patched launchers suddenly showed **no Minecraft versions and no Play button**. Your install wasn't broken; the list it downloads at startup was gone.
+>
+> The patch now points Feather at a working copy of that same version list (publicly re-hosted by Dawn in the identical format). **If you patched before this fix**, either download this repo again and re-run `Patch Feather.bat`, or just run this once in a terminal and reopen Feather:
+>
+> ```
+> setx VERSION_INDEX "https://api.dawn.gg/v2/deployments/game/stable/version_index.json"
+> ```
+
 A small Windows script that patches an **existing** Feather Client launcher so it keeps working as **Feather** instead of auto-migrating to the new **"Dawn"** client and turns off ads while it's at it.
 
 > Feather was acquired and its launcher now auto-updates itself into "Dawn". This tool stops that on a Feather install you already have.
@@ -15,8 +26,9 @@ It applies these edits to your installed Feather launcher:
 - **Enables DevTools** open with `Ctrl+Shift+I`.
 - **Sets the copyright year in the launcher's footer to 2026** cosmetic text only.
 - **Disables the Electron asar-integrity fuse** required so the modified launcher is allowed to load.
+- **Restores the Minecraft version list** by setting a per-user environment variable, `VERSION_INDEX`, to a working copy of Feather's version list (see the update note above).
 
-All edits are same-length, in-place changes to files you already have. Nothing is downloaded.
+The launcher edits are same-length, in-place changes to files you already have. The script itself downloads nothing; Feather then fetches its version list and game files as usual.
 
 ## Requirements
 
@@ -55,13 +67,15 @@ Before changing anything, the script backs up the originals next to them:
 
 To revert, restore those two `.bak` files over the originals (remove the `.featherfix.bak` suffix). That brings back the stock launcher **including ads and the Dawn auto-update.**
 
+To also remove the version-list setting, run `reg delete HKCU\Environment /v VERSION_INDEX /f` (without it, Feather will show no versions again).
+
 ## Antivirus note
 
 Patching changes the launcher, so its digital signature no longer matches. Antivirus (Windows Defender, AVAST, etc.) may warn about or quarantine `Feather Launcher.exe`. That's expected for any patched app allow/restore it, or add the folder to your exclusions. If it gets deleted, run the patcher again after allowing it.
 
 ## Trade-off: no new Minecraft versions
 
-Updates are disabled on purpose and that's what stops the Dawn takeover. The downside is that Feather is now frozen on its current Minecraft version and won't receive new ones. For the latest Minecraft, with more loader support like Forge/NeoForge, use a maintained launcher such as [Prism Launcher](https://prismlauncher.org/).
+Launcher updates are disabled on purpose and that's what stops the Dawn takeover. The launcher itself is frozen, and the list of playable Minecraft versions now depends on Dawn keeping its copy of the version list public. If that copy is moved or locked, versions disappear again until this patch is updated. For the latest Minecraft, with more loader support like Forge/NeoForge, use a maintained launcher such as [Prism Launcher](https://prismlauncher.org/).
 
 ## Disclaimer
 

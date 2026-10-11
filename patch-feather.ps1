@@ -110,6 +110,12 @@ if ($applied -gt 0) {
     [System.IO.File]::WriteAllBytes($asar,$outA)
 }
 
+# ---- Restore the version list (Feather's game-launcher.feathermc.com host was shut down) ----
+# Feather's launch engine honours the VERSION_INDEX env var; Dawn re-hosts the identical index publicly.
+$vi = 'https://api.dawn.gg/v2/deployments/game/stable/version_index.json'
+[Environment]::SetEnvironmentVariable('VERSION_INDEX', $vi, 'User')
+Say "  [+] version list source -> $vi" 'Green'
+
 Say "`nDone. Feather is patched - it will stay Feather (no Dawn update, no ads)." 'Cyan'
 Say "Open it normally; press Ctrl+Shift+I for DevTools.`n" 'Cyan'
 Read-Host "Press Enter to exit"
