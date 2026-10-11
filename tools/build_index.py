@@ -15,6 +15,10 @@ import hashlib, json, os, sys, urllib.request
 
 SOURCE = "https://api.dawn.gg/v2/deployments/game/stable/version_index.json"
 KNOWN_OS = {"windows", "windows-arm", "windows_intel_legacy", "linux", "osx", "osx-arm"}
+# The Feather engine reads only {hash, name} from the cosmetic asset index and always downloads
+# from assets.feathercdn.net/<name>. Dawn's index lists cosmetics that exist only on Dawn's CDN,
+# which 404 there and stall the download forever, so use Feather's own (still live) asset index.
+FEATHER_ASSETS = "https://assets.feathercdn.net/feather_assets_index.json"
 
 
 def fetch(url):
@@ -44,6 +48,11 @@ def main():
     out_dir, base = sys.argv[1], sys.argv[2].rstrip("/")
     os.makedirs(os.path.join(out_dir, "manifests"), exist_ok=True)
     index = json.loads(fetch(SOURCE))
+    feather_assets = {
+        "name": "feather_assets.json",
+        "sha1": hashlib.sha1(fetch(FEATHER_ASSETS)).hexdigest(),
+        "url": FEATHER_ASSETS,
+    }
     for entry in index["metadata"]:
         name = entry["name"]
         raw = fetch(entry["info"]["url"])
@@ -51,6 +60,7 @@ def main():
             sys.exit(f"sha1 mismatch for {name}; aborting")
         manifest = json.loads(raw)
         removed = clean(manifest)
+        manifest["assets_index"] = feather_assets
         data = json.dumps(manifest, separators=(",", ":")).encode()
         with open(os.path.join(out_dir, "manifests", f"{name}.json"), "wb") as f:
             f.write(data)
