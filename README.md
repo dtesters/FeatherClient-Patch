@@ -13,7 +13,7 @@
 > setx VERSION_INDEX "https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/index/version_index.json"
 > ```
 
-A small Windows script that patches an **existing** Feather Client launcher so it keeps working as **Feather** instead of auto-migrating to the new **"Dawn"** client and turns off ads while it's at it.
+This is a small Windows script that patches an **existing** Feather Client launcher so it keeps working as **Feather** instead of auto-migrating to the new **"Dawn"** client and turns off ads while it's at it.
 
 > Feather was acquired and its launcher now auto-updates itself into "Dawn". This tool stops that on a Feather install you already have.
 
