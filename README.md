@@ -29,6 +29,7 @@ It applies these edits to your installed Feather launcher:
 - **Removes Feather's frozen version allow-list check**, so versions released after Feather was abandoned can be launched.
 - **Points the launcher's mod lists (`mods.json`, `modrinth.json`) at updated copies in this repo**, which add the newer versions and the `-feather` / `-dawn` entries. Without them those versions hang on "Version Loading".
 - **Downloads cosmetics from Dawn's CDN** (`assets.dawn.gg`), which has every Feather cosmetic plus Dawn's newer ones. Without it, Dawn versions log "Failed to load image ... Cosmetic atlas doesn't exist" and show missing wings/cloaks.
+- **Loads the launcher's language, background and server-list files from this repo's mirror** (`mirror/electron-launcher/`). The launcher can't get past its splash screen without the language files, so this keeps it starting if Feather's `electron-launcher` server goes away. The mirror keeps the last good copy of each file.
 - **Copies your per-version mods to the new version names** (a backup of `feather-mods.json` is kept as `feather-mods.json.featherfix.bak`).
 
 The launcher edits are small in-place changes to files you already have (the mod-list edit makes `app.asar` 68 bytes larger, and the script updates its file table to match). The script itself downloads nothing; Feather then fetches its version list and game files as usual.
@@ -91,6 +92,17 @@ To also remove the version-list setting, run `reg delete HKCU\Environment /v VER
 ## Antivirus note
 
 Patching changes the launcher, so its digital signature no longer matches. Antivirus (Windows Defender, AVAST, etc.) may warn about or quarantine `Feather Launcher.exe`. That's expected for any patched app: allow/restore it, or add the folder to your exclusions. If it gets deleted, run the patcher again after allowing it.
+
+## Are the Feather client jars safe?
+
+The original Feather jars are downloaded from the [featherarchived](https://github.com/featherarchived/builds-cf.feathercdn.net) copy, but every one is pinned by hash in [`tools/feather_builds.json`](tools/feather_builds.json), and those hashes match the ones in Feather's own version files. The launcher checks the hash of everything it downloads: a test serving a different jar under a pinned hash was refused with `Hash check failed` and the game never started. If that archive changed a file, the version would fail to download rather than run something else.
+
+## What if Feather's servers shut down?
+
+Tested by pointing a copy of the launcher at unreachable addresses for every `feathermc.com` / `feathercdn.net` server:
+
+- **Fixed:** the launcher used to freeze on its splash screen without Feather's language files. It now loads them from this repo's mirror.
+- **Not fixable here:** before every launch, Feather's launch engine checks a token signed by Feather's account server (the engine calls this part `DRM`). If `api.feathermc.com` goes away, sign-in drops to guest mode and nothing can be launched, `-feather` or `-dawn`. Getting around that would mean defeating Feather's DRM, which this project doesn't do. If it happens, a launcher like [Prism Launcher](https://prismlauncher.org/) still runs Fabric with your own Microsoft account.
 
 ## How long will this keep working?
 
