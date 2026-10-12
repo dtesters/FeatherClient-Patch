@@ -103,6 +103,11 @@ $edits = @(
      old='ue=(0,Ar.w)(o.replace("-fabric",""))'; new='ue=(0,Ar.w)(o.split("-")[0]        )'; critical=$false },
   @{ name='Modrinth mod updates on -feather / -dawn versions';
      old='const g=(0,Ar.w)(u.replace("-fabric",""));'; new='const g=(0,Ar.w)(u.split("-")[0]        );'; critical=$false },
+  # The Modrinth mod panel listed a row per supported game version only for "<ver>-fabric" / "<ver>" names
+  # ("No supported versions"). Match through the modrinth.json mapping {version, loader} instead.
+  @{ name='Modrinth mod panel versions on -feather / -dawn versions';
+     old='const s=_.loaders.includes(R.AW.Fabric)&&C.mcVersions.hasOwnProperty(h),o=_.loaders.includes("forge")&&C.mcVersions.hasOwnProperty(P);s&&l.add(h),o&&l.add(P)';
+     new='for(const[k,q]of Object.entries(C.mcVersions))q.version===P&&_.loaders.includes(q.loader)&&l.add(k)                                                          '; critical=$false },
   @{ name='mod compatibility checks on -feather / -dawn versions (1/3)';
      old='u=f.replace("-fabric",""),p;'; new='u=f.split("-")[0]        ,p;'; critical=$false },
   @{ name='mod compatibility checks on -feather / -dawn versions (2/3)';
