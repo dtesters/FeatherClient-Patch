@@ -1,2 +1,3 @@
 # Generated index files are checksummed byte-for-byte; never rewrite line endings.
 index/** -text
+mirror/** -text
