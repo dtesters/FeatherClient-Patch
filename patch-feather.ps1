@@ -91,6 +91,24 @@ $edits = @(
   @{ name='allow versions newer than Feather''s frozen list';
      old='const u=t.mcVersions.includes(o);return u||this.notificationService';
      new='const u=(t.mcVersions.length,!0);return u||this.notificationService'; critical=$false },
+  # Versions are named e.g. 26.1.1-feather-fabric / 26.3-dawn-fabric. The custom-mod folder watcher only
+  # accepted "<version>" or "<version>-fabric" folders, so uploads and custom mods were ignored.
+  @{ name='custom mods on -feather / -dawn versions';
+     old='3}){1,2}(-fabric)?$/'; new='3}){1,2}(-[a-z]+)*$/'; critical=$false },
+  # Modrinth search/updates derived the Minecraft version by stripping "-fabric" ("26.3-dawn" matched nothing).
+  @{ name='Modrinth browsing on -feather / -dawn versions';
+     old='[(0,_.w)(d.controls.version.value.replace("-fabric",""))]';
+     new='[(0,_.w)(d.controls.version.value.split("-")[0]        )]'; critical=$false },
+  @{ name='Modrinth mod loading on -feather / -dawn versions';
+     old='ue=(0,Ar.w)(o.replace("-fabric",""))'; new='ue=(0,Ar.w)(o.split("-")[0]        )'; critical=$false },
+  @{ name='Modrinth mod updates on -feather / -dawn versions';
+     old='const g=(0,Ar.w)(u.replace("-fabric",""));'; new='const g=(0,Ar.w)(u.split("-")[0]        );'; critical=$false },
+  @{ name='mod compatibility checks on -feather / -dawn versions (1/3)';
+     old='u=f.replace("-fabric",""),p;'; new='u=f.split("-")[0]        ,p;'; critical=$false },
+  @{ name='mod compatibility checks on -feather / -dawn versions (2/3)';
+     old='u=o.replace("-fabric",""),p;'; new='u=o.split("-")[0]        ,p;'; critical=$false },
+  @{ name='mod compatibility checks on -feather / -dawn versions (3/3)';
+     old='l=t.replace("-fabric",""),u;'; new='l=t.split("-")[0]        ,u;'; critical=$false },
   # The launch engine downloads cosmetics from a hard-coded host. Dawn's CDN serves every Feather
   # cosmetic plus Dawn's newer ones at the same paths (same-length swap; the trailing NUL pins it
   # to the engine's copy, not the UI's icon URLs).

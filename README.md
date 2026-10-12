@@ -30,6 +30,7 @@ It applies these edits to your installed Feather launcher:
 - **Points the launcher's mod lists (`mods.json`, `modrinth.json`) at updated copies in this repo**, which add the newer versions and the `-feather` / `-dawn` entries. Without them those versions hang on "Version Loading".
 - **Downloads cosmetics from Dawn's CDN** (`assets.dawn.gg`), which has every Feather cosmetic plus Dawn's newer ones. Without it, Dawn versions log "Failed to load image ... Cosmetic atlas doesn't exist" and show missing wings/cloaks.
 - **Loads the launcher's language, background and server-list files from this repo's mirror** (`mirror/electron-launcher/`). The launcher can't get past its splash screen without the language files, so this keeps it starting if Feather's `electron-launcher` server goes away. The mirror keeps the last good copy of each file.
+- **Makes mods work on the `-feather` / `-dawn` names:** custom mod uploads and your existing custom mods (the launcher only read `user-mods` folders named like `26.1` or `26.1-fabric`), Modrinth browsing and updates (it searched Modrinth for game version "26.3-dawn"), and the incompatible-mod checks.
 - **Copies your per-version mods to the new version names** (a backup of `feather-mods.json` is kept as `feather-mods.json.featherfix.bak`).
 
 The launcher edits are small in-place changes to files you already have (the mod-list edit makes `app.asar` 68 bytes larger, and the script updates its file table to match). The script itself downloads nothing; Feather then fetches its version list and game files as usual.

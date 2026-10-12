@@ -96,6 +96,9 @@ def write_ui_configs(out_dir, version_names, aliases, launcher_mirror):
         for key in ("mods", "defaultMods", "dependencies"):
             copy_version_keys(mods[key], src, dst)
         copy_version_keys(modrinth["mcVersions"], src, dst)
+    # the Modrinth version picker lists these keys; keep only names that are versions in the index
+    for name in [k for k in modrinth["mcVersions"] if k not in version_names]:
+        del modrinth["mcVersions"][name]
     for name in version_names:
         if name not in mods["mcVersions"]:
             mods["mcVersions"].append(name)
