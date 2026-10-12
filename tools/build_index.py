@@ -63,6 +63,16 @@ def clean(manifest):
     return removed
 
 
+def asset_index_arg(manifest):
+    args = manifest.get("minecraft_arguments") or []
+    if isinstance(args, str):
+        args = args.split()
+    for i, a in enumerate(args[:-1]):
+        if a == "--assetIndex":
+            return args[i + 1]
+    return None
+
+
 def main():
     out_dir, base = sys.argv[1], sys.argv[2].rstrip("/")
     os.makedirs(os.path.join(out_dir, "manifests"), exist_ok=True)
@@ -72,13 +82,23 @@ def main():
         "sha1": hashlib.sha1(fetch(FEATHER_ASSETS)).hexdigest(),
         "url": FEATHER_ASSETS,
     }
+    kept = []
     for entry in index["metadata"]:
         name = entry["name"]
         raw = fetch(entry["info"]["url"])
         if hashlib.sha1(raw).hexdigest() != entry["info"]["sha1"]:
             sys.exit(f"sha1 mismatch for {name}; aborting")
         manifest = json.loads(raw)
+        # Dawn's NeoForge manifests use a newer schema (no game_assets_index) this engine can't parse.
+        if "game_assets_index" not in manifest:
+            print(f"{name:20} skipped (unsupported manifest format)")
+            continue
         removed = clean(manifest)
+        # Dawn names newer game asset indexes after Mojang's id (e.g. 34.json), but the launch args
+        # still pass --assetIndex <version>-feather-game; the engine saves the index under its name.
+        arg = asset_index_arg(manifest)
+        if arg:
+            manifest["game_assets_index"]["name"] = f"{arg}.json"
         manifest["assets_index"] = feather_assets
         data = json.dumps(manifest, separators=(",", ":")).encode()
         with open(os.path.join(out_dir, "manifests", f"{name}.json"), "wb") as f:
@@ -86,7 +106,9 @@ def main():
         entry["download_size"] = len(data)
         entry["info"]["sha1"] = hashlib.sha1(data).hexdigest()
         entry["info"]["url"] = f"{base}/manifests/{name}.json"
+        kept.append(entry)
         print(f"{name:20} stripped {removed}")
+    index["metadata"] = kept
     with open(os.path.join(out_dir, "version_index.json"), "w") as f:
         json.dump(index, f, separators=(",", ":"))
     write_ui_configs(out_dir, [e["name"] for e in index["metadata"]])

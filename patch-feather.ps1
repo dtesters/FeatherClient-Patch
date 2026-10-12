@@ -5,6 +5,7 @@
 #    - turn ads off
 #    - copyright year -> 2026
 #    - enable DevTools (Ctrl+Shift+I)
+#    - restore the version list + mod lists (Feather's servers are gone)
 #    - disable the Electron asar-integrity fuse (so the edits load)
 #  Safe & idempotent: backs up first, verifies the version,
 #  and aborts without changing anything if it doesn't match.
@@ -33,7 +34,46 @@ Start-Sleep -Milliseconds 600
 
 $enc = [System.Text.Encoding]::GetEncoding(28591)   # Latin1: 1 byte = 1 char
 
-# ---- app.asar edits (all same-length, so offsets stay valid) ----
+# Replace strings with different-length ones inside ONE packed file of an asar (Latin1 text in/out).
+# Rewrites the header: that file's size + SHA256 integrity, and shifts every later file's offset.
+# Returns the new text, or $null if none of the old strings are present.
+function Edit-AsarResize([string]$text, $pairs) {
+    $hp   = [BitConverter]::ToUInt32($enc.GetBytes($text.Substring(4,4)),0)
+    $jl   = [BitConverter]::ToUInt32($enc.GetBytes($text.Substring(12,4)),0)
+    $base = 8 + $hp
+    $hdr  = $text.Substring(16,$jl)
+    $idx  = -1
+    foreach ($p in $pairs) { $idx = $text.IndexOf($p.old,$base); if ($idx -ge 0) { break } }
+    if ($idx -lt 0) { return $null }
+    $rx = '"size":(\d+),"offset":"(\d+)"(,"integrity":\{"algorithm":"SHA256","hash":"[0-9a-f]+","blockSize":(\d+),"blocks":\[[^\]]*\]\})?'
+    $m = [regex]::Matches($hdr,$rx) | Where-Object {
+        $o=[long]$_.Groups[2].Value; $s=[long]$_.Groups[1].Value; ($base+$o) -le $idx -and $idx -lt ($base+$o+$s) } | Select-Object -First 1
+    if (-not $m) { throw "couldn't find the asar entry holding the edit" }
+    $size = [long]$m.Groups[1].Value; $off = [long]$m.Groups[2].Value
+    $body = $text.Substring($base+$off,$size)
+    foreach ($p in $pairs) { $body = $body.Replace($p.old,$p.new) }
+    $delta = $body.Length - $size
+    $entry = '"size":' + $body.Length + ',"offset":"' + $off + '"'
+    if ($m.Groups[3].Success) {
+        $bs  = [int]$m.Groups[4].Value
+        $sha = [System.Security.Cryptography.SHA256]::Create()
+        $raw = $enc.GetBytes($body)
+        $hex = { param($b) -join ($b | ForEach-Object { $_.ToString('x2') }) }
+        $blocks = for ($i=0; $i -lt $raw.Length; $i+=$bs) { '"' + (& $hex $sha.ComputeHash($raw,$i,[Math]::Min($bs,$raw.Length-$i))) + '"' }
+        $entry += ',"integrity":{"algorithm":"SHA256","hash":"' + (& $hex $sha.ComputeHash($raw)) + '","blockSize":' + $bs + ',"blocks":[' + ($blocks -join ',') + ']}'
+    }
+    $hdr = $hdr.Substring(0,$m.Index) + $entry + $hdr.Substring($m.Index+$m.Length)
+    $hdr = [regex]::Replace($hdr,'"offset":"(\d+)"',{ param($x) $o=[long]$x.Groups[1].Value
+        if ($o -gt $off) { '"offset":"' + ($o+$delta) + '"' } else { $x.Value } })
+    $pad = (4 - $hdr.Length % 4) % 4
+    $payload = 4 + $hdr.Length + $pad
+    $u = { param($n) $enc.GetString([BitConverter]::GetBytes([uint32]$n)) }
+    $data = $text.Substring($base)
+    return (& $u 4) + (& $u (4+$payload)) + (& $u $payload) + (& $u $hdr.Length) + $hdr + ([string][char]0 * $pad) +
+           $data.Substring(0,$off) + $body + $data.Substring($off+$size)
+}
+
+# ---- app.asar edits (same-length ones first; the resize below rewrites the header) ----
 $edits = @(
   @{ name='disable Dawn update';
      old='if(this.devMode){this.launcherWindowManager.window.webContents.send(YT.Update,KT.UpdateNotAvailable)';
@@ -110,8 +150,25 @@ foreach ($p in $plan) {
 if ($applied -gt 0) {
     $outA = $enc.GetBytes($textA)
     if ($outA.Length -ne $bytesA.Length) { throw "asar size changed - restore from app.asar.featherfix.bak" }
-    [System.IO.File]::WriteAllBytes($asar,$outA)
 }
+
+# ---- Point the launcher's frozen mod lists at updated copies (these edits change the file size) ----
+# Feather's mods.json/modrinth.json stop at 26.2; newer versions hang on "Version Loading" without them.
+$cfg = 'https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/index/'
+$resize = @(
+  @{ old='"https://electron-launcher.feathermc.com/mods.json"';     new="`"${cfg}mods.json`"" },
+  @{ old='"https://electron-launcher.feathermc.com/modrinth.json"'; new="`"${cfg}modrinth.json`"" }
+)
+$resized = Edit-AsarResize $textA $resize
+if ($null -ne $resized) {
+    $textA = $resized; $applied++
+    Say "  [+] mod lists -> updated copies (adds 26.3+)" 'Green'
+} elseif ($textA.Contains($resize[0].new)) {
+    Say "  [=] mod lists -> updated copies (already done)" 'DarkGray'
+} else {
+    Say "  [!] mod lists (not found in this build - skipped)" 'Yellow'
+}
+if ($applied -gt 0) { [System.IO.File]::WriteAllBytes($asar,$enc.GetBytes($textA)) }
 
 # ---- Restore the version list (Feather's game-launcher.feathermc.com host was shut down) ----
 # Feather's launch engine honours the VERSION_INDEX env var. Dawn re-hosts the index, but its manifests now

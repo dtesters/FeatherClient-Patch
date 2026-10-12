@@ -5,13 +5,17 @@
 >
 > Feather's version server (`game-launcher.feathermc.com`) was shut down, so patched launchers suddenly showed **no Minecraft versions and no Play button**. Your install wasn't broken; the list it downloads at startup was gone.
 >
-> Dawn still publishes the same version list, but its version files now contain `linux-arm` entries that Feather's last launch engine can't read, so pointing Feather straight at Dawn brings the versions back yet **every launch crashes** at "Loading version". This repo now hosts a cleaned copy (in [`index/`](index/)) that a GitHub Action rebuilds from Dawn every 6 hours, so new versions keep appearing. It also lifts Feather's frozen list of allowed versions, which unlocks newer versions such as 26.3 plus Dawn's Forge/NeoForge builds.
+> Dawn still publishes the same version list, but its version files now contain `linux-arm` entries that Feather's last launch engine can't read, so pointing Feather straight at Dawn brings the versions back yet **every launch crashes** at "Loading version". This repo now hosts a cleaned copy (in [`index/`](index/)) that a GitHub Action rebuilds from Dawn every 6 hours, so new versions keep appearing. It also lifts Feather's frozen list of allowed versions and serves updated copies of the launcher's mod lists (Feather's stop at 26.2), so newer versions such as 26.3 download, launch and show their mods. Dawn's NeoForge builds use a newer format Feather can't read, so they're left out of the list.
 >
-> **If you patched before this fix** (including the earlier Dawn-URL version of it), download this repo again and re-run `Patch Feather.bat`, or run this once in a terminal and reopen Feather:
+> **If you patched before this fix**, download this repo again and re-run `Patch Feather.bat`. It only applies what's missing.
+>
+> Only need the version list back (up to 26.2)? Running this once in a terminal and reopening Feather is enough:
 >
 > ```
 > setx VERSION_INDEX "https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/index/version_index.json"
 > ```
+>
+> Versions newer than 26.2 (26.3 and up) also need the re-run, otherwise they hang on "Version Loading" and the Mods tab freezes.
 
 This is a small Windows script that patches an **existing** Feather Client launcher so it keeps working as **Feather** instead of auto-migrating to the new **"Dawn"** client and turns off ads while it's at it.
 
@@ -30,8 +34,9 @@ It applies these edits to your installed Feather launcher:
 - **Disables the Electron asar-integrity fuse** required so the modified launcher is allowed to load.
 - **Restores the Minecraft version list** by setting a per-user environment variable, `VERSION_INDEX`, to this repo's cleaned, auto-updated version list (see the update note above).
 - **Removes Feather's frozen version allow-list check**, so versions released after Feather was abandoned can be launched.
+- **Points the launcher's mod lists (`mods.json`, `modrinth.json`) at updated copies in this repo**, which add the newer versions. Without them those versions hang on "Version Loading".
 
-The launcher edits are same-length, in-place changes to files you already have. The script itself downloads nothing; Feather then fetches its version list and game files as usual.
+The launcher edits are small in-place changes to files you already have (the mod-list edit makes `app.asar` 68 bytes larger, and the script updates its file table to match). The script itself downloads nothing; Feather then fetches its version list and game files as usual.
 
 ## Requirements
 
@@ -78,7 +83,7 @@ Patching changes the launcher, so its digital signature no longer matches. Antiv
 
 ## Trade-off: no new Minecraft versions
 
-Launcher updates are disabled on purpose and that's what stops the Dawn takeover. The launcher itself is frozen, and the list of playable Minecraft versions now depends on Dawn keeping its copy of the version list public. If that copy is moved or locked, versions disappear again until this patch is updated. For the latest Minecraft, with more loader support like Forge/NeoForge, use a maintained launcher such as [Prism Launcher](https://prismlauncher.org/).
+Launcher updates are disabled on purpose and that's what stops the Dawn takeover. The launcher itself is frozen, and the list of playable Minecraft versions now depends on Dawn keeping its copy of the version list public (and on Feather's mod lists and asset servers staying up). If that copy is moved or locked, versions disappear again until this patch is updated. For the latest Minecraft, with more loader support like Forge/NeoForge, use a maintained launcher such as [Prism Launcher](https://prismlauncher.org/).
 
 ## Disclaimer
 
