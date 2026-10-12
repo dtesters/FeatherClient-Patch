@@ -1,0 +1,69 @@
+{
+  "languages": [
+    {
+      "languageName": "English (US)",
+      "code": "en_us"
+    },
+    {
+      "languageName": "Polski",
+      "code": "pl_pl"
+    },
+    {
+      "languageName": "한국",
+      "code": "ko_kr"
+    },
+    {
+      "languageName": "Deutsch",
+      "code": "de_de"
+    },
+    {
+      "languageName": "Français",
+      "code": "fr_fr"
+    },
+    {
+      "languageName": "Italiano",
+      "code": "it_it"
+    },
+    {
+      "languageName": "普通话",
+      "code": "zh_cn"
+    },
+    {
+      "languageName": "繁體中文 (TW)",
+      "code": "zh_tw"
+    },
+    {
+      "languageName": "日本",
+      "code": "ja_jp"
+    },
+    {
+      "languageName": "Türkçe",
+      "code": "tr_tr"
+    },
+    {
+      "languageName": "Portguese (BR)",
+      "code": "pt_br"
+    },
+    {
+      "languageName": "čeština",
+      "code": "cs_cz"
+    },
+    {
+      "languageName": "Magyar",
+      "code": "hu_hu"
+    },
+    {
+      "languageName": "Español (España)",
+      "code": "es_es"
+    },
+    {
+      "languageName": "Română",
+      "code": "ro_ro"
+    },
+    {
+      "languageName": "עברית",
+      "code": "he_il"
+    }
+  ],
+  "default": "en_us"
+}

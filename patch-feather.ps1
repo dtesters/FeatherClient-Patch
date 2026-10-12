@@ -173,6 +173,17 @@ if ($null -ne $resized) {
 } else {
     Say "  [!] mod lists (not found in this build - skipped)" 'Yellow'
 }
+
+# ---- Load the launcher's other files (languages, backgrounds, server lists) from this repo's mirror ----
+# Without the language files the launcher can't even get past its splash screen, so it would die
+# with Feather's electron-launcher server. The mirror keeps the last good copy of each file.
+$mirror = @( @{ old='https://electron-launcher.feathermc.com/';
+                new='https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/mirror/electron-launcher/' } )
+$files = 0
+while ($null -ne ($resized = Edit-AsarResize $textA $mirror)) { $textA = $resized; $files++; $applied++ }
+if ($files -gt 0) { Say "  [+] launcher files -> repo mirror ($files files)" 'Green' }
+elseif ($textA.Contains($mirror[0].new)) { Say "  [=] launcher files -> repo mirror (already done)" 'DarkGray' }
+else { Say "  [!] launcher files (not found in this build - skipped)" 'Yellow' }
 if ($applied -gt 0) { [System.IO.File]::WriteAllBytes($asar,$enc.GetBytes($textA)) }
 
 # ---- Restore the version list (Feather's game-launcher.feathermc.com host was shut down) ----

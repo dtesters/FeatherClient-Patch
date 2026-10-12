@@ -1,0 +1,1389 @@
+{
+  "mcVersions": [
+    "1.8.9",
+    "1.12.2",
+    "1.17.1-fabric",
+    "1.18.2-fabric",
+    "1.19-fabric",
+    "1.19.2-fabric",
+    "1.19.3-fabric",
+    "1.19.4-fabric",
+    "1.20-fabric",
+    "1.20.1-fabric",
+    "1.20.2-fabric",
+    "1.20.4-fabric",
+    "1.20.6-fabric",
+    "1.21-fabric",
+    "1.21.1-fabric",
+    "1.21.3-fabric",
+    "1.21.4-fabric",
+    "1.21.5-fabric",
+    "1.21.7-fabric",
+    "1.21.8-fabric",
+    "1.21.10-fabric",
+    "1.21.11-fabric",
+    "26.1-fabric",
+    "26.1.1-fabric",
+    "26.1.2-fabric",
+    "26.2-fabric"
+  ],
+  "categories": [
+    {
+      "description": "Hypixel mods",
+      "name": "Hypixel"
+    },
+    {
+      "description": "Mods to improve your game performance",
+      "name": "Performance"
+    },
+    {
+      "description": "Mods that have useful utility",
+      "name": "Tools"
+    },
+    {
+      "description": "Fun mods for Minecraft",
+      "name": "Fun"
+    }
+  ],
+  "defaultMods": [
+    {
+      "author": "sp614x",
+      "description": "Performance enhancing FPS boost",
+      "image": "https://images.feathercdn.net/DZaee.png",
+      "mcVersions": {
+        "1.12.2": {
+          "download": "https://optifine.net/adloadx?f=OptiFine_1.12.2_HD_U_G5.jar",
+          "name": "OptiFine_1.12.2_HD_U_G5.jar",
+          "sha1": "ca3aea3a09ce215906c346fe190907fe0347b0c4",
+          "size": 0,
+          "version": "OptiFine HD U G5"
+        },
+        "1.8.9": {
+          "download": "https://optifine.net/adloadx?f=preview_OptiFine_1.8.9_HD_U_M6_pre2.jar",
+          "name": "preview_OptiFine_1.8.9_HD_U_M6_pre2.jar",
+          "sha1": "0bb792be16ec78d8b62586cc4856950befb3391b",
+          "size": 0,
+          "version": "OptiFine HD U M6 pre2"
+        }
+      },
+      "name": "Optifine",
+      "slug": "optifine"
+    },
+    {
+      "author": "Spottedstar",
+      "description": "Fabric mod for rewriting the light engine to fix lighting performance and lighting errors.",
+      "image": "https://images.feathercdn.net/0zc0N.png",
+      "mcVersions": {
+        "1.19-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3835/973/starlight-1.1.1%2Bfabric.ae22326.jar",
+          "name": "starlight-1.19-fabric.jar",
+          "sha1": "de6fe932555604345477db89b59d59249909c640",
+          "size": 0,
+          "version": "1.1.1"
+        },
+        "1.19.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3835/973/starlight-1.1.1%2Bfabric.ae22326.jar",
+          "name": "starlight-1.19-fabric.jar",
+          "sha1": "de6fe932555604345477db89b59d59249909c640",
+          "size": 0,
+          "version": "1.1.1"
+        },
+        "1.19.3-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3835/973/starlight-1.1.1%2Bfabric.ae22326.jar",
+          "name": "starlight-1.19-fabric.jar",
+          "sha1": "de6fe932555604345477db89b59d59249909c640",
+          "size": 0,
+          "version": "1.1.1"
+        },
+        "1.19.4-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3835/973/starlight-1.1.1%2Bfabric.ae22326.jar",
+          "name": "starlight-1.19-fabric.jar",
+          "sha1": "de6fe932555604345477db89b59d59249909c640",
+          "size": 0,
+          "version": "1.1.1"
+        },
+        "1.20-fabric": {
+          "download": "https://cdn-raw.modrinth.com/data/H8CaAYZC/versions/XGIsoVGT/starlight-1.1.2%2Bfabric.dbc156f.jar",
+          "name": "starlight-1.20-fabric.jar",
+          "sha1": "a03102cab439cbab5a1d7d72cd7c2b4976ddd421",
+          "size": 0,
+          "version": "1.1.2"
+        },
+        "1.20.1-fabric": {
+          "download": "https://cdn-raw.modrinth.com/data/H8CaAYZC/versions/XGIsoVGT/starlight-1.1.2%2Bfabric.dbc156f.jar",
+          "name": "starlight-1.20-fabric.jar",
+          "sha1": "a03102cab439cbab5a1d7d72cd7c2b4976ddd421",
+          "size": 0,
+          "version": "1.1.2"
+        },
+        "1.20.2-fabric": {
+          "download": "https://cdn-raw.modrinth.com/data/H8CaAYZC/versions/98VOoYPX/starlight-1.1.2%2Bfabric.bdaeb21.jar",
+          "name": "starlight-1.20.2-fabric.jar",
+          "sha1": "6cf71105561a6893f76ae561fdbef839c404b8b5",
+          "size": 0,
+          "version": "1.1.2"
+        }
+      },
+      "name": "Starlight",
+      "slug": "starlight"
+    },
+    {
+      "author": "tr7zw",
+      "description": "Using async path-tracing to skip rendering Tiles/Entities that are not visible.",
+      "image": "https://images.feathercdn.net/rJgul.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3642/141/entityculling-fabric-mc1.17.1-1.5.0.jar",
+          "name": "entityculling-fabric-1.17.1.jar",
+          "sha1": "19bacef4b20221e6be8aa1b17415c9a1465f19ad",
+          "size": 0,
+          "version": "1.5.0-1.17.1"
+        },
+        "1.18.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3743/933/entityculling-fabric-mc1.18-1.5.1.jar",
+          "name": "entityculling-fabric-1.18.jar",
+          "sha1": "523c57485a469c581d7a9bd18ec86c7a92a0ec93",
+          "size": 0,
+          "version": "1.5.1-1.18"
+        },
+        "1.19-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3823/508/entityculling-fabric-1.5.2-mc1.19.jar",
+          "name": "entityculling-fabric-1.19.jar",
+          "sha1": "ff5520d7b10342358575220d88bd39c8cea80dad",
+          "size": 0,
+          "version": "1.5.2-1.19"
+        },
+        "1.19.2-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4404/950/entityculling-fabric-1.6.1-mc1.19.2.jar",
+          "name": "entityculling-fabric-1.19.jar",
+          "sha1": "534d7dc7a3f241300e09e7e95d3ae5d4ee5be886",
+          "size": 0,
+          "version": "1.6.1-1.19"
+        },
+        "1.19.3-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4403/101/entityculling-fabric-1.6.1-mc1.19.3.jar",
+          "name": "entityculling-fabric-1.19.3.jar",
+          "sha1": "9d289e59681072d0caeae8fefbd164872a82d856",
+          "size": 0,
+          "version": "1.6.1-1.19.3"
+        },
+        "1.19.4-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4437/103/entityculling-fabric-1.6.2-mc1.19.4.jar",
+          "name": "entityculling-fabric-1.19.4.jar",
+          "sha1": "3a9381229408afa9d2c7d7e3fad017e5079ab20c",
+          "size": 0,
+          "version": "1.6.2-1.19.3"
+        },
+        "1.20-fabric": {
+          "download": "https://github.com/tr7zw/EntityCulling/releases/download/1.6.2-1.20/entityculling-fabric-1.6.2-mc1.20.jar",
+          "name": "entityculling-fabric-1.20.jar",
+          "sha1": "cf43e7a58fb62f75d664cce1b14a6064774e6547",
+          "size": 0,
+          "version": "1.6.2-1.20"
+        },
+        "1.20.1-fabric": {
+          "download": "https://github.com/tr7zw/EntityCulling/releases/download/1.6.2-1.20.2/entityculling-fabric-1.6.2-mc1.20.1.jar",
+          "name": "entityculling-fabric-1.20.1.jar",
+          "sha1": "8e4be2bb9703deddb3d3d212c812cdc1f9de072b",
+          "size": 0,
+          "version": "1.6.2-1.20.1"
+        },
+        "1.20.2-fabric": {
+          "download": "https://github.com/tr7zw/EntityCulling/releases/download/1.6.2-1.20.2/entityculling-fabric-1.6.2-mc1.20.1.jar",
+          "name": "entityculling-fabric-1.20.1.jar",
+          "sha1": "8e4be2bb9703deddb3d3d212c812cdc1f9de072b",
+          "size": 0,
+          "version": "1.6.2-1.20.1"
+        }
+      },
+      "name": "EntityCulling",
+      "slug": "entityCulling"
+    }
+  ],
+  "dependencies": [
+    {
+      "author": "badasintended",
+      "mcVersions": {
+        "1.18.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3773/641/badpackets-fabric-0.1.2.jar",
+          "name": "badpackets-1.18.jar",
+          "sha1": "098653c88addec413623a78c20e2f001e5647079",
+          "size": 0,
+          "version": "0.1.2"
+        },
+        "1.19-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3773/641/badpackets-fabric-0.1.2.jar",
+          "name": "badpackets-1.18.jar",
+          "sha1": "098653c88addec413623a78c20e2f001e5647079",
+          "size": 0,
+          "version": "0.1.2"
+        },
+        "1.19.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3903/798/badpackets-fabric-0.2.0.jar",
+          "name": "badpackets-1.19.jar",
+          "sha1": "8d0855fd49c43921108431501600d976b1927559",
+          "size": 0,
+          "version": "0.2.0"
+        },
+        "1.19.3-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4162/674/badpackets-fabric-0.3.4.jar",
+          "name": "badpackets-1.19.3.jar",
+          "sha1": "d65faf486a088e1a706b29457f6b1725665a8379",
+          "size": 0,
+          "version": "0.3.4"
+        }
+      },
+      "name": "bad packets",
+      "slug": "badPackets"
+    },
+    {
+      "author": "BlayTheNinth",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3539/926/balm-fabric-1.9.0%2B0.jar",
+          "name": "balm-fabric-1.17.jar",
+          "sha1": "53ebb634b9c86ad90e516da12cd0b22e7b71c0cb",
+          "size": 0,
+          "version": "1.9.0"
+        },
+        "1.18.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3830/796/balm-fabric-3.1.0%2B0.jar",
+          "name": "balm-fabric-1.18.2.jar",
+          "sha1": "0ad991574784541dffe9915e0ab731c66dab4f0a",
+          "size": 0,
+          "version": "3.1.0"
+        },
+        "1.19-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3901/902/balm-fabric-4.5.1%2B0.jar",
+          "name": "balm-fabric-1.19.jar",
+          "sha1": "ce0f409d071e03a25221324b27438947307491cc",
+          "size": 0,
+          "version": "4.5.1"
+        },
+        "1.19.2-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/3913/965/balm-fabric-4.5.2%2B0.jar",
+          "name": "balm-fabric-1.19.2.jar",
+          "sha1": "1522f8c3eddd62ba81dbdf558462b1afe9de0d52",
+          "size": 0,
+          "version": "4.5.2"
+        },
+        "1.19.3-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4191/404/balm-fabric-1.19.3-5.0.1.jar",
+          "name": "balm-fabric-1.19.3.jar",
+          "sha1": "c1188d9a1ab4b2a5484f87bcd94c9332bc86bcce",
+          "size": 0,
+          "version": "5.0.1"
+        }
+      },
+      "name": "Balm",
+      "slug": "balm"
+    },
+    {
+      "author": "masady",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3498/871/malilib-fabric-1.17.1-0.10.0-dev.26.jar",
+          "name": "malilib-fabric-1.17.jar",
+          "sha1": "42ae3dbdc290508cfc49940a1333843b92a74446",
+          "size": 0,
+          "version": "0.10.0"
+        }
+      },
+      "name": "MaLiLib",
+      "slug": "maLiLib"
+    },
+    {
+      "author": "shedaniel",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3587/386/architectury-2.9.3.jar",
+          "name": "architectury-fabric-1.17.jar",
+          "sha1": "44163b7471d73ab0f43ee03d8b0590fb7303ce7b",
+          "size": 0,
+          "version": "v2.9.3"
+        },
+        "1.18.2-fabric": {
+          "download": "https://media.forgecdn.net/files/3742/42/architectury-4.1.41.jar",
+          "name": "architectury-fabric-1.18.2.jar",
+          "sha1": "efa0fd36e3f00d1ee4eb356e8b352fb82c20e970",
+          "size": 0,
+          "version": "v4.1.41"
+        },
+        "1.19-fabric": {
+          "download": "https://media.forgecdn.net/files/3824/895/architectury-5.6.21.jar",
+          "name": "architectury-fabric-1.19.jar",
+          "sha1": "27a5f8613c0f66036d23bc4ab85aa79d127eb352",
+          "size": 0,
+          "version": "v5.6.21"
+        },
+        "1.19.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3909/770/architectury-6.0.35-fabric.jar",
+          "name": "architectury-fabric-1.19.2.jar",
+          "sha1": "07ee08a76b1a72e91fb3dc07fdbf6e1a4dcae256",
+          "size": 0,
+          "version": "v6.0.35"
+        },
+        "1.19.3-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4149/688/architectury-7.0.64-fabric.jar",
+          "name": "architectury-fabric-1.19.3.jar",
+          "sha1": "07af73390bd41f00fe5641ba7a629b16cda1386e",
+          "size": 0,
+          "version": "v7.0.64"
+        }
+      },
+      "name": "Architectury API",
+      "slug": "architecturyAPI"
+    },
+    {
+      "author": "shedaniel",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3559/636/cloth-config-5.2.47-fabric.jar",
+          "name": "cloth-config-api-fabric-1.17.jar",
+          "sha1": "dcd0f1cf65b9809dbea9cf2710d5d60c95a4b613",
+          "size": 0,
+          "version": "v5.2.47"
+        },
+        "1.18.2-fabric": {
+          "download": "https://media.forgecdn.net/files/3641/132/cloth-config-6.2.57-fabric.jar",
+          "name": "cloth-config-api-fabric-1.18.jar",
+          "sha1": "c52ef239d9d3d3473312d3f57bd8e730155ee5a5",
+          "size": 0,
+          "version": "v6.2.57"
+        },
+        "1.19-fabric": {
+          "download": "https://media.forgecdn.net/files/3822/831/cloth-config-7.0.69-fabric.jar",
+          "name": "cloth-config-api-fabric-1.19.jar",
+          "sha1": "2af50ff83c60396839d4b332452e4d1405d9491d",
+          "size": 0,
+          "version": "v7.0.69"
+        },
+        "1.19.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3906/387/cloth-config-8.0.75-fabric.jar",
+          "name": "cloth-config-api-fabric-1.19.1.jar",
+          "sha1": "1d6175cee479a4fac60fc314e988e70485bd29b1",
+          "size": 0,
+          "version": "v8.0.75"
+        },
+        "1.19.3-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4119/163/cloth-config-9.0.93-fabric.jar",
+          "name": "cloth-config-api-fabric-1.19.3.jar",
+          "sha1": "ea4c2aa1d7600360e81c6f3de442e4d5d6c77845",
+          "size": 0,
+          "version": "v9.0.93"
+        }
+      },
+      "name": "Cloth Config API",
+      "slug": "clothConfigAPI"
+    }
+  ],
+  "mods": [
+    {
+      "author": "CaffeineMC",
+      "categories": [
+        "Performance"
+      ],
+      "description": "NOT COMPATIBLE WITH OPTIFINE! A Fabric mod designed to improve frame rates and reduce micro-stutter",
+      "image": "https://images.feathercdn.net/l1ys7.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://github.com/CaffeineMC/sodium-fabric/releases/tag/mc1.17.1-0.3.4",
+          "type": "link",
+          "version": "0.3.4"
+        },
+        "1.18.2-fabric": {
+          "download": "https://github.com/CaffeineMC/sodium-fabric/releases/tag/mc1.18.2-0.4.1",
+          "type": "link",
+          "version": "0.4.1"
+        },
+        "1.19-fabric": {
+          "download": "https://github.com/CaffeineMC/sodium-fabric/releases/download/mc1.19-0.4.2/sodium-fabric-mc1.19-0.4.2+build.16.jar",
+          "type": "link",
+          "version": "0.4.2"
+        },
+        "1.19.2-fabric": {
+          "download": "https://github.com/CaffeineMC/sodium-fabric/releases/download/mc1.19.2-0.4.4/sodium-fabric-mc1.19.2-0.4.4+build.18.jar",
+          "type": "link",
+          "version": "0.4.4"
+        },
+        "1.19.3-fabric": {
+          "download": "https://github.com/CaffeineMC/sodium-fabric/releases/download/mc1.19.3-0.4.9/sodium-fabric-mc1.19.3-0.4.9+build.23.jar",
+          "type": "link",
+          "version": "0.4.9"
+        },
+        "1.19.4-fabric": {
+          "download": "https://github.com/CaffeineMC/sodium-fabric/releases/download/mc1.19.4-0.4.10/sodium-fabric-mc1.19.4-0.4.10+build.24.jar",
+          "type": "link",
+          "version": "0.4.10"
+        },
+        "1.20-fabric": {
+          "download": "https://github.com/CaffeineMC/sodium-fabric/releases/download/mc1.20-0.4.10/sodium-fabric-mc1.20-0.4.10+build.27.jar",
+          "type": "link",
+          "version": "0.4.10"
+        }
+      },
+      "name": "Sodium",
+      "slug": "sodiumLink"
+    },
+    {
+      "author": "CaffeineMC",
+      "categories": [
+        "Performance"
+      ],
+      "description": "NOT COMPATIBLE WITH OPTIFINE! A Fabric mod designed to improve the general performance of Minecraft without breaking things",
+      "image": "https://images.feathercdn.net/uj5QA.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://github.com/CaffeineMC/lithium-fabric/releases/tag/mc1.17.1-0.7.5",
+          "type": "link",
+          "version": "0.7.5"
+        },
+        "1.18.2-fabric": {
+          "download": "https://github.com/CaffeineMC/lithium-fabric/releases/download/mc1.18.2-0.10.2/lithium-fabric-mc1.18.2-0.10.2.jar",
+          "type": "link",
+          "version": "0.10.2"
+        },
+        "1.19-fabric": {
+          "download": "https://github.com/CaffeineMC/lithium-fabric/releases/download/mc1.19-0.8.1/lithium-fabric-mc1.19-0.8.1.jar",
+          "type": "link",
+          "version": "0.8.1"
+        },
+        "1.19.2-fabric": {
+          "download": "https://github.com/CaffeineMC/lithium-fabric/releases/download/mc1.19.2-0.10.2/lithium-fabric-mc1.19.2-0.10.2.jar",
+          "type": "link",
+          "version": "0.10.2"
+        },
+        "1.19.3-fabric": {
+          "download": "https://github.com/CaffeineMC/lithium-fabric/releases/download/mc1.19.3-0.10.4/lithium-fabric-mc1.19.3-0.10.4.jar",
+          "type": "link",
+          "version": "0.10.4"
+        },
+        "1.19.4-fabric": {
+          "download": "https://github.com/CaffeineMC/lithium-fabric/releases/download/mc1.19.4-0.11.1/lithium-fabric-mc1.19.4-0.11.1.jar",
+          "type": "link",
+          "version": "0.11.1"
+        }
+      },
+      "name": "Lithium",
+      "slug": "lithiumLink"
+    },
+    {
+      "author": "Sk1er LLC",
+      "categories": [
+        "Performance"
+      ],
+      "description": "A Forge mod full of Vanilla bug fixes, Quality of Life improvements, and performance enhancements.",
+      "image": "https://images.feathercdn.net/RyVqN.png",
+      "mcVersions": {
+        "1.8.9": {
+          "download": "https://static.sk1er.club/repo/mods/patcher/1.8.9/1.8.9/Patcher-1.8.9%20(1.8.9).jar",
+          "name": "patcher-1.8.9.jar",
+          "sha1": "4421d04c0e2e632e4fa4bb26b621b66ac7f99159",
+          "size": 0,
+          "version": "1.8.9"
+        }
+      },
+      "name": "Patcher",
+      "slug": "patcher"
+    },
+    {
+      "author": "Iris Shaders",
+      "categories": [
+        "Performance"
+      ],
+      "description": "MUST USE SODIUM! A modern shaders mod for Minecraft intended to be compatible with existing OptiFine shader packs.",
+      "image": "https://images.feathercdn.net/POrjh.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://github.com/IrisShaders/Iris/releases/download/1.17.x-v1.2.5/iris-mc1.17.1-1.2.5.jar",
+          "name": "iris-1.17.jar",
+          "sha1": "24867f4c6ec86f8c9a156b810b6c7e7ccca3431b",
+          "size": 0,
+          "version": "1.2.5"
+        },
+        "1.18.2-fabric": {
+          "download": "https://github.com/IrisShaders/Iris/releases/download/1.5.2%2B1.18.2/iris-mc1.18.2-1.5.2.jar",
+          "name": "iris-1.18.2.jar",
+          "sha1": "6f45ff61ff914ab42815c903c1937d108cacd625",
+          "size": 0,
+          "version": "1.5.2"
+        },
+        "1.19-fabric": {
+          "download": "https://github.com/IrisShaders/Iris/releases/download/1.19.x-v1.2.5/iris-mc1.19-1.2.5.jar",
+          "name": "iris-1.19.jar",
+          "sha1": "499a3e1b13eafb0eb4dceee1152c84b23211e0d5",
+          "size": 0,
+          "version": "1.2.5"
+        },
+        "1.19.2-fabric": {
+          "download": "https://github.com/IrisShaders/Iris/releases/download/1.5.2%2B1.19.2/iris-mc1.19.2-1.5.2.jar",
+          "name": "iris-1.19.2.jar",
+          "sha1": "5377f13f7315dd48111bd431bb8ea6e6137a8c62",
+          "size": 0,
+          "version": "1.5.2"
+        },
+        "1.19.3-fabric": {
+          "download": "https://github.com/IrisShaders/Iris/releases/download/1.5.2%2B1.19.3/iris-mc1.19.3-1.5.2.jar",
+          "name": "iris-1.19.3.jar",
+          "sha1": "b6404f241552c4ff296ee867f95b4229495ca35c",
+          "size": 0,
+          "version": "1.5.2"
+        },
+        "1.19.4-fabric": {
+          "download": "https://github.com/IrisShaders/Iris/releases/download/1.5.2%2B1.19.4/iris-mc1.19.4-1.5.2.jar",
+          "name": "iris-1.19.4.jar",
+          "sha1": "61ef0ba2a5e44e21b1608a3126cebca64da81a81",
+          "size": 0,
+          "version": "1.5.2"
+        },
+        "1.20-fabric": {
+          "download": "https://github.com/IrisShaders/Iris/releases/download/1.6.4%2B1.20/iris-mc1.20-1.6.4.jar",
+          "name": "iris-1.20.jar",
+          "sha1": "ec1491adc5dffeb0ab2f5da290b32cd4e45d58ad",
+          "size": 0,
+          "version": "1.6.4"
+        }
+      },
+      "name": "Iris Shaders",
+      "slug": "irisShaders"
+    },
+    {
+      "author": "xaero96",
+      "categories": [
+        "Tools"
+      ],
+      "description": "Xaero's minimap keeps the aesthetic of vanilla Minecraft, which helps it be a more seamless addition to the game. It is also the first rotating square minimap for Minecraft.",
+      "image": "https://images.feathercdn.net/yONLv.png",
+      "mcVersions": {
+        "1.12.2": {
+          "download": "https://media.forgecdn.net/files/3613/277/Xaeros_Minimap_22.1.0_Forge_1.12.jar",
+          "name": "Xaeros_Minimap_Forge_1.12.jar",
+          "sha1": "796b92f0725374c934bf992434b3c523ceb69789",
+          "size": 0,
+          "version": "22.1.0"
+        },
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3819/351/Xaeros_Minimap_22.9.2_Fabric_1.17.1.jar",
+          "name": "xaeros-minimap-fabric-1.17.1.jar",
+          "sha1": "f5fdb009ecdd9b31031f3a56ed39f7737099b967",
+          "size": 0,
+          "version": "22.9.2"
+        },
+        "1.18.2-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4075/399/Xaeros_Minimap_22.16.2_Fabric_1.18.2.jar",
+          "name": "xaeros-minimap-fabric-1.18.2.jar",
+          "sha1": "fed8fc0c07d209e921c6b12a8bddbc636e3aa2b2",
+          "size": 0,
+          "version": "22.9.2"
+        },
+        "1.19-fabric": {
+          "download": "https://media.forgecdn.net/files/3819/492/Xaeros_Minimap_22.9.2_Fabric_1.19.jar",
+          "name": "xaeros-minimap-fabric-1.19.jar",
+          "sha1": "e1b5ec24495ec166b59bf70706b3478254c7c9e8",
+          "size": 0,
+          "version": "22.9.2"
+        },
+        "1.19.2-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4075/402/Xaeros_Minimap_22.16.2_Fabric_1.19.1.jar",
+          "name": "xaeros-minimap-fabric-1.19.1.jar",
+          "sha1": "e256b0e747a0b85a1ecbdebb08e4ed0e3f4d27e5",
+          "size": 0,
+          "version": "22.16.2"
+        },
+        "1.19.3-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4338/624/Xaeros_Minimap_22.17.1_Fabric_1.19.3.jar",
+          "name": "xaeros-minimap-fabric-1.19.3.jar",
+          "sha1": "fe202b6792f7506ad89124082a6d1a6ed3458340",
+          "size": 0,
+          "version": "22.17.0"
+        },
+        "1.19.4-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4440/701/Xaeros_Minimap_23.3.1_Fabric_1.19.4.jar",
+          "name": "xaeros-minimap-fabric-1.19.4.jar",
+          "sha1": "b2640382d1caa6a1a2a155ae811de2c109905396",
+          "size": 0,
+          "version": "23.3.1"
+        },
+        "1.8.9": {
+          "download": "https://media.forgecdn.net/files/3599/490/Xaeros_Minimap_21.10.18_Forge_1.8.9.jar",
+          "name": "Xaeros_Minimap_Forge_1.8.9.jar",
+          "sha1": "d29375fff47db0c1dadf97c3e3ec6d1be1e45c3f",
+          "size": 0,
+          "version": "21.10.18"
+        }
+      },
+      "name": "Xaero's Minimap",
+      "slug": "xaerosMinimap"
+    },
+    {
+      "author": "TerraformersMC",
+      "categories": [
+        "Tools"
+      ],
+      "description": "A menu for, you guessed it, mods!",
+      "image": "https://images.feathercdn.net/G6Jod.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3479/750/modmenu-2.0.14.jar",
+          "name": "modmenu-fabric-1.17.jar",
+          "sha1": "024f4736d4a8585f1eac91e92892d4eab2b0ad8a",
+          "size": 0,
+          "version": "2.0.14"
+        },
+        "1.18.2-fabric": {
+          "download": "https://github.com/TerraformersMC/ModMenu/releases/download/v3.1.0/modmenu-3.1.0.jar",
+          "name": "modmenu-fabric-1.18.2.jar",
+          "sha1": "b520422af2fce2d7cd02b6b9ae4f025822670c28",
+          "size": 0,
+          "version": "3.1.0"
+        },
+        "1.19-fabric": {
+          "download": "https://github.com/TerraformersMC/ModMenu/releases/download/v4.0.0/modmenu-4.0.0.jar",
+          "name": "modmenu-fabric-1.19.jar",
+          "sha1": "04be7e499bf67be0fea40d15f17a9ec47f21c309",
+          "size": 0,
+          "version": "4.0.0"
+        },
+        "1.19.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3902/967/modmenu-4.0.5.jar",
+          "name": "modmenu-fabric-1.19.1.jar",
+          "sha1": "1acf6cadf20243d753705e2212d88f90670e49fd",
+          "size": 0,
+          "version": "4.0.5"
+        },
+        "1.19.3-fabric": {
+          "download": "https://github.com/TerraformersMC/ModMenu/releases/download/v5.0.2/modmenu-5.0.2.jar",
+          "name": "modmenu-fabric-1.19.3.jar",
+          "sha1": "bcc0199aeaa40fabeda867d629a9fca7300056ad",
+          "size": 0,
+          "version": "5.0.2"
+        },
+        "1.19.4-fabric": {
+          "download": "https://github.com/TerraformersMC/ModMenu/releases/download/v6.1.0-rc.4/modmenu-6.1.0-rc.4.jar",
+          "name": "modmenu-fabric-1.19.4.jar",
+          "sha1": "d3ec07e6358e95b5ed775ea5a8b1ea938f108a53",
+          "size": 0,
+          "version": "6.1.0-rc4"
+        }
+      },
+      "name": "Mod Menu",
+      "slug": "modMenu"
+    },
+    {
+      "author": "Rader",
+      "categories": [
+        "Tools"
+      ],
+      "description": "This mod bring back the old Create New World menu on modern versions. If you, like me, don't like the new Create New World menu, you'll like this mod.",
+      "image": "https://images.feathercdn.net/9b1N5.png",
+      "mcVersions": {
+        "1.19.4-fabric": {
+          "download": "https://cdn-raw.modrinth.com/data/QhpP1Ltu/versions/2kMwQIsa/oldworldmenu-1.0.2.jar",
+          "name": "oldworldmenu-1.19.4.jar",
+          "sha1": "db30dc5d4d12235a801b51b78f467bcedd4d2499",
+          "size": 0,
+          "version": "1.0.2"
+        }
+      },
+      "name": "Old World Menu",
+      "slug": "oldWorldMenu"
+    },
+    {
+      "author": "shedaniel",
+      "categories": [
+        "Tools"
+      ],
+      "dependencies": [
+        "architecturyAPI",
+        "clothConfigAPI"
+      ],
+      "description": "Alternative of AlmostEnoughItems / JustEnoughItems",
+      "image": "https://images.feathercdn.net/pAHPN.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3587/232/RoughlyEnoughItems-6.3.358.jar",
+          "name": "RoughlyEnoughItems-fabric-1.17.1.jar",
+          "sha1": "f279cc95ec599114868ddb463a313651607c9118",
+          "size": 0,
+          "version": "v6.3.358"
+        },
+        "1.19-fabric": {
+          "download": "https://media.forgecdn.net/files/3822/853/RoughlyEnoughItems-9.0.472.jar",
+          "name": "RoughlyEnoughItems-fabric-1.19.jar",
+          "sha1": "a0665ffb27641f9d297e707c2a6c47c47d80c126",
+          "size": 0,
+          "version": "v9.0.472"
+        },
+        "1.19.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3909/552/RoughlyEnoughItems-9.1.520.jar",
+          "name": "RoughlyEnoughItems-fabric-1.19.2.jar",
+          "sha1": "d59bcf25e656581972ebef5b360c306485a172d5",
+          "size": 0,
+          "version": "v9.1.520"
+        },
+        "1.19.3-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4167/518/RoughlyEnoughItems-10.0.581.jar",
+          "name": "RoughlyEnoughItems-fabric-1.19.3.jar",
+          "sha1": "231243e0858f8cc8aa3159b8d2225da2fec0f93d",
+          "size": 0,
+          "version": "v10.0.581"
+        }
+      },
+      "name": "Roughly Enough Items",
+      "slug": "roughlyEnoughItems"
+    },
+    {
+      "author": "masady",
+      "categories": [
+        "Tools"
+      ],
+      "dependencies": [
+        "maLiLib"
+      ],
+      "description": "A modern client-side schematic mod for Minecraft",
+      "image": "https://images.feathercdn.net/GJe8h.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3580/241/litematica-fabric-1.17.1-0.9.0.jar",
+          "name": "litematica-fabric-1.17.jar",
+          "sha1": "2c8f73c09b3ac999f8e9ae03cf217860f60b3dc7",
+          "size": 0,
+          "version": "0.9.0"
+        }
+      },
+      "name": "Litematica",
+      "slug": "Litematica"
+    },
+    {
+      "author": "ShayBox",
+      "categories": [
+        "Tools"
+      ],
+      "description": "Show durability on damaged items",
+      "image": "https://images.feathercdn.net/tRco9.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3447/869/Durability101-fabric-1.17-0.0.4.jar",
+          "name": "durability101-fabric-1.17.jar",
+          "sha1": "d1adccc2009c9402982360b63cfb734acf4a8650",
+          "size": 0,
+          "version": "0.0.4"
+        },
+        "1.18.2-fabric": {
+          "download": "https://media.forgecdn.net/files/3599/853/Durability101-fabric-1.18-0.0.4.jar",
+          "name": "durability101-fabric-1.18.jar",
+          "sha1": "1d1c4f3976f0510a3c6b1fb949234bbc5ca835a2",
+          "size": 0,
+          "version": "0.0.4"
+        },
+        "1.19-fabric": {
+          "download": "https://media.forgecdn.net/files/3829/747/Durability101-fabric-1.19-0.0.4.jar",
+          "name": "durability101-fabric-1.19.jar",
+          "sha1": "0daf0a1f6a4510293f88b560240a1216208e8468",
+          "size": 0,
+          "version": "0.0.4"
+        },
+        "1.19.2-fabric": {
+          "download": "https://media.forgecdn.net/files/3829/747/Durability101-fabric-1.19-0.0.4.jar",
+          "name": "durability101-fabric-1.19.jar",
+          "sha1": "0daf0a1f6a4510293f88b560240a1216208e8468",
+          "size": 0,
+          "version": "0.0.4"
+        },
+        "1.19.3-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4166/903/Durability101-fabric-1.19.3-0.0.4.jar",
+          "name": "durability101-fabric-1.19.3.jar",
+          "sha1": "0ec3e42c062f7062e91d589c729bcccca131842c",
+          "size": 0,
+          "version": "0.0.4"
+        },
+        "1.19.4-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4452/645/Durability101-fabric-1.19.4-0.0.4.jar",
+          "name": "durability101-fabric-1.19.4.jar",
+          "sha1": "f533e7f37a46aeb5e9f4a081bf9cce10df4b7efe",
+          "size": 0,
+          "version": "0.0.4"
+        }
+      },
+      "name": "Durability101",
+      "slug": "durability101"
+    },
+    {
+      "author": "YaLTeR",
+      "categories": [
+        "Tools"
+      ],
+      "dependencies": [
+        "balm",
+        "clothConfigAPI"
+      ],
+      "description": "A Minecraft mod that enhances inventory management.",
+      "image": "https://images.feathercdn.net/ev0TS.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3515/479/MouseTweaks-fabric-mc1.17.1-2.15.jar",
+          "name": "mousetweaks-fabric-1.17.jar",
+          "sha1": "74219037f0a7058fa6d2dcdfe977f56db2360cc7",
+          "size": 0,
+          "version": "2.15"
+        }
+      },
+      "name": "Mouse Tweaks",
+      "slug": "mouseTweaks"
+    },
+    {
+      "author": "ModdingForBlockheads",
+      "categories": [
+        "Tools"
+      ],
+      "dependencies": [
+        "balm",
+        "clothConfigAPI"
+      ],
+      "description": "This mod adds a bunch of optional tweaks to improve the Quality of Life during gameplay. Tweaks can be individually enabled or disabled and configured. Many of the tweaks are disabled by default, so make sure to enable the features you want for the most bestest experience possible.",
+      "image": "https://images.feathercdn.net/izb0I.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3528/42/clienttweaks-fabric-6.0.0%2B0.jar",
+          "name": "clienttweaks-fabric-1.17.jar",
+          "sha1": "9b12f485de32940f31533cafa0b81b6b87cb842f",
+          "size": 0,
+          "version": "6.0.0"
+        },
+        "1.18.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3666/466/clienttweaks-fabric-1.18.1-7.1.0.jar",
+          "name": "clienttweaks-fabric-1.18.jar",
+          "sha1": "913dab9bdb658fe9105bbaaaa2d299191a60c450",
+          "size": 0,
+          "version": "7.1.0"
+        },
+        "1.19-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3901/913/clienttweaks-fabric-1.19-8.1.0.jar",
+          "name": "clienttweaks-fabric-1.19.jar",
+          "sha1": "14cb22dc1fabfc168eec8e67d6574ac2bc6233c8",
+          "size": 0,
+          "version": "8.1.0"
+        },
+        "1.19.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3901/913/clienttweaks-fabric-1.19-8.1.0.jar",
+          "name": "clienttweaks-fabric-1.19.jar",
+          "sha1": "14cb22dc1fabfc168eec8e67d6574ac2bc6233c8",
+          "size": 0,
+          "version": "8.1.0"
+        }
+      },
+      "name": "Client Tweaks",
+      "slug": "clientTweaks"
+    },
+    {
+      "author": "badasintended",
+      "categories": [
+        "Tools"
+      ],
+      "dependencies": [
+        "badPackets"
+      ],
+      "description": "WTHIT is a mod that adds an ingame tooltip with information about what block (or fluid) the player is looking at.",
+      "image": "https://images.feathercdn.net/MVX5E.png",
+      "mcVersions": {
+        "1.18.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3834/227/wthit-fabric-4.11.0.jar",
+          "name": "wthit-1.18.jar",
+          "sha1": "c26ef360f6246d0d13d7c19b7537548df2fa2212",
+          "size": 0,
+          "version": "4.11.0"
+        },
+        "1.19-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3906/12/wthit-fabric-5.9.0.jar",
+          "name": "wthit-1.19.jar",
+          "sha1": "dbc64e55788fa44575b432d8a7c66a35e9d5a1ff",
+          "size": 0,
+          "version": "5.9.0"
+        },
+        "1.19.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3906/12/wthit-fabric-5.9.0.jar",
+          "name": "wthit-1.19.jar",
+          "sha1": "dbc64e55788fa44575b432d8a7c66a35e9d5a1ff",
+          "size": 0,
+          "version": "5.9.0"
+        },
+        "1.19.3-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4162/930/wthit-fabric-6.1.1.jar",
+          "name": "wthit-1.19.3.jar",
+          "sha1": "fe35ab48c68e0a8067dc5a029c851fd754444659",
+          "size": 0,
+          "version": "6.1.1"
+        }
+      },
+      "name": "WTHIT",
+      "slug": "wthit"
+    },
+    {
+      "author": "sk89q",
+      "categories": [
+        "Tools"
+      ],
+      "description": "Minecraft map editor and mod",
+      "image": "https://images.feathercdn.net/A7p6b.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3502/100/worldedit-mod-7.2.7.jar",
+          "name": "worldedit-1.17.jar",
+          "sha1": "336fe4d409ce07a7d07d9016b305530b1013ea09",
+          "size": 0,
+          "version": "7.2.7"
+        },
+        "1.18.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3697/298/worldedit-mod-7.2.10.jar",
+          "name": "worldedit-1.18.2.jar",
+          "sha1": "40fc7f7a734ccbd53365bc91c1a17fafcec1965d",
+          "size": 0,
+          "version": "7.2.10"
+        },
+        "1.19-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3836/903/worldedit-mod-7.2.11-beta-01.jar",
+          "name": "worldedit-1.19.jar",
+          "sha1": "9155ef3f86b979c7de08d30ddca579916a5d4937",
+          "size": 0,
+          "version": "7.2.12"
+        },
+        "1.19.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3922/622/worldedit-mod-7.2.12.jar",
+          "name": "worldedit-1.19.2.jar",
+          "sha1": "3583d0182a2a5c96d13434ed48ebb29742228174",
+          "size": 0,
+          "version": "7.2.12"
+        },
+        "1.19.3-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4162/208/worldedit-mod-7.2.13.jar",
+          "name": "worldedit-1.19.3.jar",
+          "sha1": "fc3bb0c35d9275c53fd1840fdc1344dba785cacf",
+          "size": 0,
+          "version": "7.2.13"
+        },
+        "1.19.4-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4445/118/worldedit-mod-7.2.14.jar",
+          "name": "worldedit-1.19.3.jar",
+          "sha1": "86290086a4f0d77e839d4003f13b01785afe7a4b",
+          "size": 0,
+          "version": "7.2.14"
+        }
+      },
+      "name": "WorldEdit",
+      "slug": "worldEdit"
+    },
+    {
+      "author": "bugfroggy",
+      "categories": [
+        "Hypixel"
+      ],
+      "description": "Minecraft mod that allows Hypixel users to quickly join games and execute functions on the network.",
+      "image": "https://images.feathercdn.net/m7GWF.png",
+      "mcVersions": {
+        "1.12.2": {
+          "download": "https://github.com/QuickplayMod/quickplay/releases/download/2.0.8/Quickplay-1.12-2.0.8.jar",
+          "name": "Quickplay-1.12.jar",
+          "sha1": "78b504c7ac5e1f914ea269c79bb8c96e32912fd9",
+          "size": 0,
+          "version": "2.0.8"
+        },
+        "1.8.9": {
+          "download": "https://github.com/QuickplayMod/quickplay/releases/download/2.0.8/Quickplay-1.8.9-2.0.8.jar",
+          "name": "Quickplay-1.8.9.jar",
+          "sha1": "56575f8506cf040c1541a61717bd932eddaf59e0",
+          "size": 0,
+          "version": "2.0.8"
+        }
+      },
+      "name": "Quickplay",
+      "slug": "quickplay"
+    },
+    {
+      "author": "Biscuit",
+      "categories": [
+        "Hypixel"
+      ],
+      "description": "Tons of utility stuff for Hypixel Skyblock",
+      "image": "https://images.feathercdn.net/rllkH.png",
+      "mcVersions": {
+        "1.8.9": {
+          "download": "https://github.com/BiscuitDevelopment/SkyblockAddons/releases/download/v1.7.3/SkyblockAddons-1.7.3+7380-for-MC-1.8.9.jar",
+          "name": "SkyblockAddons-for-MC-1.8.9.jar",
+          "sha1": "260e1bb658ced5982f562f47882e7db5533e1887",
+          "size": 0,
+          "version": "1.7.3"
+        }
+      },
+      "name": "Skyblock Addons",
+      "slug": "skyblockAddons"
+    },
+    {
+      "author": "Moulberry",
+      "categories": [
+        "Hypixel"
+      ],
+      "description": "A mod that provides a NEI interface for searching and viewing item crafting recipes and information in Hypixel's Skyblock gamemode.",
+      "image": "https://images.feathercdn.net/Zx9K6.png",
+      "mcVersions": {
+        "1.8.9": {
+          "download": "https://github.com/Moulberry/NotEnoughUpdates/releases/download/2.1.0/NotEnoughUpdates-2.1.jar",
+          "name": "NEU-1.8.9.jar",
+          "sha1": "97b506bc19762ef59e4891571ab6c966c9baa548",
+          "size": 0,
+          "version": "2.1.0"
+        }
+      },
+      "name": "NotEnoughUpdates",
+      "slug": "notEnoughUpdates"
+    },
+    {
+      "author": "BananaFructa",
+      "categories": [
+        "Hypixel"
+      ],
+      "description": "GUI Improvement mod for Skyblock.",
+      "image": "https://images.feathercdn.net/maWKs.png",
+      "mcVersions": {
+        "1.8.9": {
+          "download": "https://github.com/BananaFructa/Apec/releases/download/1.11.6/apec-1.11.6.jar",
+          "name": "Apec-forge-1.8.9.jar",
+          "sha1": "a29c412cf51b201975586eb3bb51fded275a419f",
+          "size": 0,
+          "version": "1.11.6"
+        }
+      },
+      "name": "Apec",
+      "slug": "apec"
+    },
+    {
+      "author": "bowser0000",
+      "categories": [
+        "Hypixel"
+      ],
+      "description": "QOL changes that enhances your Hypixel Skyblock experience.",
+      "image": "https://images.feathercdn.net/2j808.png",
+      "mcVersions": {
+        "1.8.9": {
+          "download": "https://github.com/bowser0000/SkyblockMod/releases/download/v2.2/MC.1.8.9.Danker.s.Skyblock.Mod.-.2.2.jar",
+          "name": "1.8.9.Danker.s.Skyblock.Mod.jar",
+          "sha1": "b12c99d447bf43245a2c84cb007c5acd61570c25",
+          "size": 0,
+          "version": "2.2"
+        }
+      },
+      "name": "Danker's Skyblock Mod",
+      "slug": "dankersSkyblockMod"
+    },
+    {
+      "author": "Quantizr",
+      "categories": [
+        "Hypixel"
+      ],
+      "description": "This mod adds Secret Waypoints to Skyblock Dungeons, allowing for faster and easier secret finding.",
+      "image": "https://images.feathercdn.net/GYZuV.png",
+      "mcVersions": {
+        "1.8.9": {
+          "download": "https://github.com/Quantizr/DungeonRoomsMod/releases/tag/v3.4.0",
+          "type": "link",
+          "version": "3.4.0"
+        }
+      },
+      "name": "Dungeon Rooms Mod",
+      "slug": "dungeonRoomsMod"
+    },
+    {
+      "author": "cow-mc",
+      "categories": [
+        "Hypixel"
+      ],
+      "description": "This mod is very good for dungeon players who want to know who their teammates are. When you are about to do a run, it will display the stats of all members in your party.",
+      "image": "https://images.feathercdn.net/K4CZy.png",
+      "mcVersions": {
+        "1.8.9": {
+          "download": "https://github.com/cow-mc/Cowlection/releases/download/v1.8.9-0.16.0/Cowlection-1.8.9-0.16.0.jar",
+          "name": "Cowlection-1.8.9-0.16.0.jar",
+          "sha1": "ae9695c5694653d3fcbe61d59b2eb9649c2b2cac",
+          "size": 0,
+          "version": "0.16.0"
+        }
+      },
+      "name": "Cowlection",
+      "slug": "cowlection"
+    },
+    {
+      "author": "MrFast",
+      "categories": [
+        "Hypixel"
+      ],
+      "description": "A mod made to make your life easier through its unique features.",
+      "image": "https://images.feathercdn.net/ZxPMxJLW.png",
+      "mcVersions": {
+        "1.8.9": {
+          "download": "https://cdn.modrinth.com/data/5SDy0bij/versions/geNiMeOP/SkyblockTweaks-1.0.5.jar",
+          "name": "SkyblockTweaks-1.0.5.jar",
+          "sha1": "b1d2d1b5788acd630dda9fabd2a623fc98bd21b3",
+          "size": 0,
+          "version": "1.0.5"
+        }
+      },
+      "name": "Skyblock Tweaks",
+      "slug": "skyblockTweaks"
+    },
+    {
+      "author": "Earthcomputer",
+      "categories": [
+        "Tools"
+      ],
+      "description": "A mod to connect to multiple Minecraft server versions",
+      "image": "https://images.feathercdn.net/uHao8.png",
+      "mcVersions": {
+        "1.18.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3854/575/multiconnect-1.5.11.jar",
+          "name": "multiconnect-fabric-1.18.jar",
+          "sha1": "eedefacd043103f56b4934fb27dea4a5f6fb5a04",
+          "size": 0,
+          "version": "1.5.11"
+        },
+        "1.19-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3854/98/multiconnect-1.6-beta.17.jar",
+          "name": "multiconnect-fabric-1.19.jar",
+          "sha1": "4960d419a19fd552aa7a6ea5f3d29167ed106d3b",
+          "size": 0,
+          "version": "1.6-beta"
+        }
+      },
+      "name": "multiconnect",
+      "slug": "multiconnect"
+    },
+    {
+      "author": "Apace100",
+      "categories": [
+        "Fun"
+      ],
+      "description": "Choose an Origin and begin your game with special abilities, some of which help you out, while others hinder you in your gameplay.",
+      "image": "https://images.feathercdn.net/eBQed.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3516/44/Origins-1.17-1.1.4.jar",
+          "name": "origins-fabric-1.17.jar",
+          "sha1": "a4db8930bcec8061efb800dbf853a4762dd12fd8",
+          "size": 0,
+          "version": "1.1.4"
+        },
+        "1.18.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3752/286/Origins-1.18.2-1.4.1.jar",
+          "name": "origins-fabric-1.18.2.jar",
+          "sha1": "696f33de73a4cf35baa347797fdd8dbb26c18541",
+          "size": 0,
+          "version": "1.4.1"
+        },
+        "1.19-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3860/460/Origins-1.19-1.6.2.jar",
+          "name": "origins-fabric-1.19.jar",
+          "sha1": "b104dc366a8b6c4a952ec3f89b4de7f7857cc5a8",
+          "size": 0,
+          "version": "1.6.2"
+        },
+        "1.19.2-fabric": {
+          "download": "https://mediafilez.forgecdn.net/files/4044/263/Origins-1.19.2-1.7.1.jar",
+          "name": "origins-fabric-1.19.2.jar",
+          "sha1": "b1410b30daeb585da247d0c48a3a9fe2f650fede",
+          "size": 0,
+          "version": "1.7.1"
+        }
+      },
+      "name": "Origins",
+      "slug": "origins"
+    },
+    {
+      "author": "tr7zw",
+      "categories": [
+        "Fun"
+      ],
+      "description": "Replaces the usually flat second layer of player skins with a 3d modeled version. Will automatically switch to the vanilla 2d rendering when players are further away than 12 blocks in order to increase the framerate. Also supports transparent parts on things like glasses!",
+      "image": "https://images.feathercdn.net/9T0ff.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://www.curseforge.com/minecraft/mc-mods/skin-layers-3d/files/3739535",
+          "type": "link",
+          "version": "1.4.3"
+        },
+        "1.18.2-fabric": {
+          "download": "https://www.curseforge.com/minecraft/mc-mods/skin-layers-3d/files/3808405",
+          "type": "link",
+          "version": "1.4.6"
+        },
+        "1.19-fabric": {
+          "download": "https://www.curseforge.com/minecraft/mc-mods/skin-layers-3d/files/3911580",
+          "type": "link",
+          "version": "1.5.1"
+        },
+        "1.19.2-fabric": {
+          "download": "https://www.curseforge.com/minecraft/mc-mods/skin-layers-3d/files/3911580",
+          "type": "link",
+          "version": "1.5.1"
+        },
+        "1.19.3-fabric": {
+          "download": "https://www.curseforge.com/minecraft/mc-mods/skin-layers-3d/files/4142188",
+          "type": "link",
+          "version": "1.5.2"
+        }
+      },
+      "name": "Skin Layers 3D",
+      "slug": "skinlayers3dlink"
+    },
+    {
+      "author": "HDSkins",
+      "categories": [
+        "Fun"
+      ],
+      "description": "You want to use high-resolution skins instead of the old-fashioned 64x64 skins in Minecraft? Then you've come to the right place! Upload skins up to 2048x2048 pixels and see other users' HD skins in-game.\nDiscord: https://discord.hdskins.de/",
+      "image": "https://images.feathercdn.net/hHxqL.png",
+      "mcVersions": {
+        "1.12.2": {
+          "download": "https://assets.feathercdn.net/mods/hdskins/1/HDSkins-1.12.jar",
+          "name": "hdskins-fabric-1.18.jar",
+          "sha1": "0a0f27801dd67da1482b7feec8af27152f0e445a",
+          "size": 0,
+          "version": ""
+        },
+        "1.18.2-fabric": {
+          "download": "https://assets.feathercdn.net/mods/hdskins/1/HDSkins-Fabric-1.18.1.jar",
+          "name": "hdskins-fabric-1.18.jar",
+          "sha1": "1956921801c3acb833f3bd4863debff64b098a84",
+          "size": 0,
+          "version": ""
+        },
+        "1.19-fabric": {
+          "download": "https://assets.feathercdn.net/mods/hdskins/1/HDSkins-Fabric-1.19.jar",
+          "name": "hdskins-fabric-1.19.jar",
+          "sha1": "4d55e3ce26c859f5064d89602070c7cc9d7c7144",
+          "size": 0,
+          "version": ""
+        },
+        "1.19.2-fabric": {
+          "download": "https://assets.feathercdn.net/mods/hdskins/1/HDSkins-Fabric-1.19.jar",
+          "name": "hdskins-fabric-1.19.jar",
+          "sha1": "4d55e3ce26c859f5064d89602070c7cc9d7c7144",
+          "size": 0,
+          "version": ""
+        },
+        "1.19.3-fabric": {
+          "download": "https://assets.feathercdn.net/mods/hdskins/1/HDSkins-Fabric-1.19.jar",
+          "name": "hdskins-fabric-1.19.jar",
+          "sha1": "4d55e3ce26c859f5064d89602070c7cc9d7c7144",
+          "size": 0,
+          "version": ""
+        },
+        "1.19.4-fabric": {
+          "download": "https://assets.feathercdn.net/mods/hdskins/1/HDSkins-Fabric-1.19.4.jar",
+          "name": "hdskins-fabric-1.19.4.jar",
+          "sha1": "0292f31dd401e82f32d079dde92a4bd99a67677d",
+          "size": 0,
+          "version": ""
+        },
+        "1.8.9": {
+          "download": "https://assets.feathercdn.net/mods/hdskins/1/HDSkins-1.8.jar",
+          "name": "hdskins-fabric-1.18.jar",
+          "sha1": "526851d61d4a1e284f5abb609f5da2f5872db4de",
+          "size": 0,
+          "version": ""
+        }
+      },
+      "name": "HDSkins",
+      "slug": "hdskins"
+    },
+    {
+      "author": "SHsuperCM",
+      "categories": [
+        "Fun"
+      ],
+      "description": "Re-implements MCPatcher's CIT (custom item textures from optifine resource packs)",
+      "image": "https://images.feathercdn.net/SL3zp.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://media.forgecdn.net/files/3609/272/CITResewn-0.9.1%2B1.17.1.jar",
+          "name": "CITResewn-fabric-1.17.jar",
+          "sha1": "ac422ad6ec5bed7a52c34af6dd6fa8430a802c92",
+          "size": 0,
+          "version": "0.9.1"
+        },
+        "1.18.2-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3825/841/CITResewn-1.1.0%2B1.18.2.jar",
+          "name": "CITResewn-fabric-1.18.2.jar",
+          "sha1": "46ab68ccc94669368348a3d28fcc11c2f5897c84",
+          "size": 0,
+          "version": "1.1.0"
+        },
+        "1.19-fabric": {
+          "download": "https://mediafiles.forgecdn.net/files/3825/827/CITResewn-1.1.0%2B1.19.jar",
+          "name": "CITResewn-fabric-1.19.jar",
+          "sha1": "882be93e426bd8747e08c7acadcc5fb04e6d8195",
+          "size": 0,
+          "version": "1.1.0"
+        }
+      },
+      "name": "CIT Resewn",
+      "slug": "citResewn"
+    },
+    {
+      "author": "doctor4t",
+      "categories": [
+        "Fun"
+      ],
+      "description": "A client mod that adds fireflies and various glow-in-the-dark ambient particles to your world.",
+      "image": "https://images.feathercdn.net/7ljz0.png",
+      "mcVersions": {
+        "1.17.1-fabric": {
+          "download": "https://www.curseforge.com/minecraft/mc-mods/illuminations/files/3541106",
+          "type": "link",
+          "version": "1.10.1"
+        },
+        "1.18.2-fabric": {
+          "download": "https://www.curseforge.com/minecraft/mc-mods/illuminations/files/3791214",
+          "type": "link",
+          "version": "1.10.4"
+        },
+        "1.19-fabric": {
+          "download": "https://www.curseforge.com/minecraft/mc-mods/illuminations/files/3846131",
+          "type": "link",
+          "version": "1.10.8"
+        },
+        "1.19.2-fabric": {
+          "download": "https://www.curseforge.com/minecraft/mc-mods/illuminations/files/3846131",
+          "type": "link",
+          "version": "1.10.8"
+        }
+      },
+      "name": "Illuminations",
+      "slug": "illuminations"
+    },
+    {
+      "author": "doctor4t",
+      "categories": [
+        "Fun"
+      ],
+      "description": "Effective is a client-side Fabric mod that adds various visual and auditory effects lacking in Vanilla Minecraft to improve overall ambience and feel of the game. Currently, it adds water and lava splashes to entities falling in liquids, as well as cascade visual and sound effects.",
+      "image": "https://images.feathercdn.net/i8rSQ.png",
+      "mcVersions": {
+        "1.18.2-fabric": {
+          "download": "https://www.curseforge.com/minecraft/mc-mods/effective/files/3735277",
+          "type": "link",
+          "version": "1.2.1"
+        },
+        "1.19-fabric": {
+          "download": "https://www.curseforge.com/minecraft/mc-mods/effective/files/3823332",
+          "type": "link",
+          "version": "1.2.1"
+        },
+        "1.19.2-fabric": {
+          "download": "https://www.curseforge.com/minecraft/mc-mods/effective/files/3823332",
+          "type": "link",
+          "version": "1.2.1"
+        }
+      },
+      "name": "Effective",
+      "slug": "effective"
+    }
+  ]
+}

@@ -27,8 +27,11 @@ KNOWN_OS = {"windows", "windows-arm", "windows_intel_legacy", "linux", "osx", "o
 FEATHER_ASSETS = "https://assets.feathercdn.net/feather_assets_index.json"
 # The launcher UI also loads these frozen configs. A version missing from them stalls
 # "Version Loading" and freezes the Mods tab, so republish them with Dawn's newer versions added.
-FEATHER_MODS = "https://electron-launcher.feathermc.com/mods.json"
-FEATHER_MODRINTH = "https://electron-launcher.feathermc.com/modrinth.json"
+# Everything else the launcher UI loads from there (it won't even start without the language
+# files). The patch points the launcher at mirror/electron-launcher/ in this repo.
+ELECTRON_LAUNCHER = "https://electron-launcher.feathermc.com/"
+LAUNCHER_FILES = ["launch-background.json", "partner-server-meta.json", "server-templates2.json",
+                  "mod-validation2.json", "mods.json", "modrinth.json", "languages2/language_list.json"]
 TOOLS = os.path.dirname(os.path.abspath(__file__))
 # Feather's final client jars (release 1782267228), pinned by sha1 so the archive can't swap them.
 FEATHER_BUILDS = os.path.join(TOOLS, "feather_builds.json")
@@ -50,10 +53,45 @@ def copy_version_keys(node, src, dst):
             copy_version_keys(v, src, dst)
 
 
-def write_ui_configs(out_dir, version_names, aliases):
+def fetch_or_keep(url, path):
+    """Refresh a mirrored file from Feather if it still answers; otherwise keep the last good copy."""
+    try:
+        data = fetch(url)
+        json.loads(data)  # don't overwrite a good copy with an error page
+    except Exception as e:
+        if not os.path.exists(path):
+            raise
+        print(f"  kept mirrored copy of {url} ({e.__class__.__name__})")
+        with open(path, "rb") as f:
+            return f.read()
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "wb") as f:
+        f.write(data)
+    return data
+
+
+def mirror_launcher_files(mirror_dir):
+    """Copy the launcher's config/language files so it still starts if Feather's server goes away."""
+    root = os.path.join(mirror_dir, "electron-launcher")
+    for name in LAUNCHER_FILES:
+        fetch_or_keep(ELECTRON_LAUNCHER + name, os.path.join(root, *name.split("/")))
+    with open(os.path.join(root, "languages2", "language_list.json"), "rb") as f:
+        codes = [l["code"] for l in json.load(f)["languages"]]
+    for code in codes:
+        name = f"languages2/{code}.json"
+        try:
+            fetch_or_keep(ELECTRON_LAUNCHER + name, os.path.join(root, *name.split("/")))
+        except Exception as e:
+            print(f"  no copy of {name} ({e.__class__.__name__})")
+    return root
+
+
+def write_ui_configs(out_dir, version_names, aliases, launcher_mirror):
     """aliases: {Dawn variant name: the Feather name whose mod entries it shares}"""
-    mods = json.loads(fetch(FEATHER_MODS))
-    modrinth = json.loads(fetch(FEATHER_MODRINTH))
+    with open(os.path.join(launcher_mirror, "mods.json"), "rb") as f:
+        mods = json.load(f)
+    with open(os.path.join(launcher_mirror, "modrinth.json"), "rb") as f:
+        modrinth = json.load(f)
     for dst, src in aliases.items():
         for key in ("mods", "defaultMods", "dependencies"):
             copy_version_keys(mods[key], src, dst)
@@ -164,10 +202,12 @@ def asset_index_arg(manifest):
 
 def main():
     out_dir, base = sys.argv[1], sys.argv[2].rstrip("/")
+    mirror_dir = os.path.join(os.path.dirname(os.path.abspath(out_dir)), "mirror")
+    launcher_mirror = mirror_launcher_files(mirror_dir)
     index = json.loads(fetch(SOURCE))
     feather_assets = {
         "name": "feather_assets.json",
-        "sha1": hashlib.sha1(fetch(FEATHER_ASSETS)).hexdigest(),
+        "sha1": hashlib.sha1(fetch_or_keep(FEATHER_ASSETS, os.path.join(mirror_dir, "feather_assets_index.json"))).hexdigest(),
         "url": FEATHER_ASSETS,
     }
     builds = json.load(open(FEATHER_BUILDS))
@@ -207,7 +247,7 @@ def main():
         emit(entry, dawn_name, manifest)
     for sub, assets in (("", feather_assets), ("v2", dawn_assets)):
         write_tree(os.path.join(out_dir, sub), f"{base}/{sub}".rstrip("/"), index, versions, assets)
-    write_ui_configs(out_dir, [name for _, name, _ in versions], aliases)
+    write_ui_configs(out_dir, [name for _, name, _ in versions], aliases, launcher_mirror)
     print(f"wrote {len(versions)} versions to {out_dir} (and v2/)")
 
 

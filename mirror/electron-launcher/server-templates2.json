@@ -1,0 +1,153 @@
+{
+  "defaultJavaArgs": "-Xms{RAM}M -Xmx{RAM}M",
+  "defaultTemplate": "Vanilla",
+  "templates": [
+    {
+      "defaultVersion": "26.2",
+      "description": "Vanilla Minecraft experience",
+      "image": "https://images.feathercdn.net/8S384.png",
+      "name": "Vanilla",
+      "versions": [
+        "26.2",
+        "26.1.2",
+        "26.1.1",
+        "26.1",
+        "1.21.11",
+        "1.21.10",
+        "1.21.9",
+        "1.21.8",
+        "1.21.7",
+        "1.21.6",
+        "1.21.5",
+        "1.21.4",
+        "1.21.3",
+        "1.21.1",
+        "1.21",
+        "1.20.6",
+        "1.20.4",
+        "1.20.2",
+        "1.20.1",
+        "1.20",
+        "1.19.4",
+        "1.19.3",
+        "1.19.2",
+        "1.19",
+        "1.18.2"
+      ],
+      "supports": []
+    },
+    {
+      "defaultVersion": "26.2",
+      "description": "High performance Spigot fork that aims to fix gameplay and mechanic inconsistencies. You can install your own Bukkit plugins.",
+      "image": "https://images.feathercdn.net/wuDPk.png",
+      "name": "Paper",
+      "versions": [
+        "26.2",
+        "26.1.2",
+        "26.1.1",
+        "1.21.11",
+        "1.21.10",
+        "1.21.9",
+        "1.21.8",
+        "1.21.7",
+        "1.21.6",
+        "1.21.5",
+        "1.21.4",
+        "1.21.3",
+        "1.21.1",
+        "1.21",
+        "1.20.6",
+        "1.20.4",
+        "1.20.2",
+        "1.20.1",
+        "1.20",
+        "1.19.4",
+        "1.19.3",
+        "1.19.2",
+        "1.19",
+        "1.18.2",
+        "1.8.9"
+      ],
+      "supports": [
+        "plugins"
+      ],
+      "hangar": {
+        "platforms": [
+          "PAPER"
+        ]
+      },
+      "curseforge": {},
+      "modrinth": {
+        "plugins": [
+          "paper",
+          "bukkit",
+          "spigot"
+        ]
+      }
+    },
+    {
+      "defaultVersion": "26.2",
+      "description": "Fabric server to run with your favorite mods.",
+      "image": "https://images.feathercdn.net/D6KNC.png",
+      "name": "Fabric",
+      "versions": [
+        "26.2",
+        "26.1.2",
+        "26.1.1",
+        "26.1",
+        "1.21.11",
+        "1.21.10",
+        "1.21.9",
+        "1.21.8",
+        "1.21.7",
+        "1.21.6",
+        "1.21.5",
+        "1.21.4",
+        "1.21.3",
+        "1.21.1",
+        "1.21",
+        "1.20.6",
+        "1.20.4",
+        "1.20.2",
+        "1.20.1",
+        "1.20",
+        "1.19.4",
+        "1.19.3",
+        "1.19.2",
+        "1.19",
+        "1.18.2"
+      ],
+      "supports": [
+        "mods"
+      ],
+      "modrinth": {
+        "mods": [
+          "fabric"
+        ]
+      }
+    },
+    {
+      "defaultVersion": "ProxyOnly",
+      "description": "Only run Feather Proxy, host your local server on port 25565!",
+      "image": "https://images.feathercdn.net/4anlFLbZ.png",
+      "name": "ProxyOnly",
+      "versions": [
+        "ProxyOnly"
+      ],
+      "supports": []
+    },
+    {
+      "defaultJavaVersion": "25",
+      "description": "We dont have what you're looking for? Use a custom template and customize your own settings. Open folder and name the jar server.jar.",
+      "image": "https://images.feathercdn.net/jBQSo.png",
+      "javaVersions": [
+        "25",
+        "21",
+        "17",
+        "11",
+        "8"
+      ],
+      "name": "Custom"
+    }
+  ]
+}

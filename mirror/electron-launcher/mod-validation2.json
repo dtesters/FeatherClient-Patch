@@ -1,0 +1,446 @@
+{
+  "featherIncompatible": {
+    "foamfix": null,
+    "betterchat": null,
+    "betterfps": null,
+    "bossbarcustomizer": null,
+    "fastchat": {
+      "mcVersions": [
+        "1.8.9"
+      ],
+      "message": "Feather has this in chat options"
+    },
+    "neubad": {
+      "message": "Please download the latest version of NEU"
+    },
+    "oam": {
+      "mcVersions": [
+        "1.8.9"
+      ],
+      "message": "Feather already has one built in"
+    },
+    "skierOldAnimations": {
+      "mcVersions": [
+        "1.8.9"
+      ],
+      "message": "Feather already has one built in"
+    },
+    "lithiumOld": {
+      "mcVersions": [
+        "1.18.2",
+        "1.19.2"
+      ],
+      "message": "Outdated mod version, please update!"
+    },
+    "scrollabletooltips": {
+      "message": "Feather already has one built in"
+    },
+    "simpletogglesprint": {
+      "message": "Feather already has one built in"
+    },
+    "chatHeads": {
+      "message": "Built into Feather's \"Custom Chat\" mod"
+    },
+    "fabricApi": {
+      "message": "Already included with Feather"
+    },
+    "lazydfu": {
+      "message": "Already included with Feather"
+    },
+    "itemmodelfix": {
+      "message": "Already included with Feather"
+    },
+    "controlling": {
+      "message": "Already included with Feather"
+    },
+    "viewmodel": {
+      "message": "Feather already has one built in"
+    },
+    "morechathistory": {
+      "message": "Feather already has one built in"
+    },
+    "nofog": {
+      "message": "Feather already has one built in"
+    }
+  },
+  "identifiers": {
+    "nofog": {
+      "modMeta": [
+        {
+          "id": "no_fog",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "morechathistory": {
+      "modMeta": [
+        {
+          "id": "morechathistory",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "viewmodel": {
+      "modMeta": [
+        {
+          "id": "viewmodel",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "controlling": {
+      "modMeta": [
+        {
+          "id": "controlling",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "itemmodelfix": {
+      "modMeta": [
+        {
+          "id": "itemmodelfix",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "lazydfu": {
+      "modMeta": [
+        {
+          "id": "lazydfu",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "fabricApi": {
+      "modMeta": [
+        {
+          "id": "fabric-api",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "chatHeads": {
+      "image": "https://images.feathercdn.net/9dvV8Nsp.png",
+      "modMeta": [
+        {
+          "id": "chat_heads",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "bazaarNotifier": {
+      "image": "https://images.feathercdn.net/8nRFL.png",
+      "modMeta": [
+        {
+          "id": "BazaarNotifier",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "skierOldAnimations": {
+      "modMeta": [
+        {
+          "id": "sk1er_old_animations",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ],
+      "name": "Sk1er Old Animation"
+    },
+    "betterchat": {
+      "modMeta": [
+        {
+          "id": "betterchat",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ],
+      "name": "Better Chat"
+    },
+    "betterfps": {
+      "filename": [
+        "BetterFps"
+      ],
+      "name": "Better FPS"
+    },
+    "bossbarcustomizer": {
+      "modMeta": [
+        {
+          "id": "bossbar_customizer",
+          "versionPattern": [
+            "^LOCAL$"
+          ]
+        }
+      ],
+      "name": "Bossbar Customizer"
+    },
+    "dungeonRoomsMod": {
+      "image": "https://images.feathercdn.net/GYZuV.png",
+      "modMeta": [
+        {
+          "id": "dungeonrooms",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "effective": {
+      "image": "https://images.feathercdn.net/i8rSQ.png",
+      "modMeta": [
+        {
+          "id": "effective",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "essential": {
+      "image": "https://images.feathercdn.net/wfMN3.png",
+      "filename": [
+        "Essential-"
+      ],
+      "name": "Essential"
+    },
+    "fastchat": {
+      "filename": [
+        "FastChat"
+      ],
+      "name": "Fast Chat"
+    },
+    "hdskins": {
+      "modMeta": [
+        {
+          "id": "hdskins",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ],
+      "name": "HDSkins"
+    },
+    "illuminations": {
+      "image": "https://images.feathercdn.net/7ljz0.png",
+      "modMeta": [
+        {
+          "id": "illuminations",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "irisShaders": {
+      "modMeta": [
+        {
+          "id": "iris",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ],
+      "name": "Iris Shaders"
+    },
+    "lithiumOld": {
+      "image": "https://images.feathercdn.net/uj5QA.png",
+      "modMeta": [
+        {
+          "id": "lithium",
+          "versionPattern": [
+            "0\\.8\\..*",
+            "0\\.7\\..*",
+            "0\\.9\\..*"
+          ]
+        }
+      ],
+      "name": "Lithium"
+    },
+    "lithium": {
+      "image": "https://images.feathercdn.net/uj5QA.png",
+      "modMeta": [
+        {
+          "id": "lithium",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ],
+      "name": "Lithium"
+    },
+    "neubad": {
+      "modMeta": [
+        {
+          "id": "notenoughupdates",
+          "versionPattern": [
+            "^1.7-REL$"
+          ]
+        }
+      ]
+    },
+    "foamfix": {
+      "filename": [
+        "FoamFix"
+      ],
+      "name": "FoamFix"
+    },
+    "oam": {
+      "filename": [
+        "Orange\\'s\\+1\\.7\\+Animations",
+        "OldAnimationsMod"
+      ],
+      "name": "Old Animations Mod"
+    },
+    "patcherValidation": {
+      "image": "https://images.feathercdn.net/RyVqN.png",
+      "modMeta": [
+        {
+          "id": "patcher",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ],
+      "name": "Patcher"
+    },
+    "playerapi": {
+      "filename": [
+        "PlayerAPI"
+      ],
+      "name": "Player API"
+    },
+    "replaymod": {
+      "image": "https://images.feathercdn.net/3xUj5.png",
+      "modMeta": [
+        {
+          "id": "replaymod",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "sbe": {
+      "image": "https://images.feathercdn.net/FTZ52.png",
+      "modMeta": [
+        {
+          "id": "SkyblockExtras",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "scrollabletooltips": {
+      "modMeta": [
+        {
+          "id": "text_overflow_scroll",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ],
+      "name": "Scrollable Tooltips"
+    },
+    "simpletogglesprint": {
+      "modMeta": [
+        {
+          "id": "simpletogglesprint",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "skinlayers3d": {
+      "image": "https://images.feathercdn.net/9T0ff.png",
+      "modMeta": [
+        {
+          "id": "skinlayers",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ],
+      "name": "Skin Layers 3D"
+    },
+    "skytils": {
+      "image": "https://images.feathercdn.net/K3M74.png",
+      "modMeta": [
+        {
+          "id": "skytils",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    },
+    "sodium": {
+      "image": "https://images.feathercdn.net/l1ys7.png",
+      "modMeta": [
+        {
+          "id": "sodium",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ],
+      "name": "Sodium"
+    },
+    "worldedit": {
+      "image": "https://images.feathercdn.net/A7p6b.png",
+      "modMeta": [
+        {
+          "id": "worldedit",
+          "versionPattern": [
+            ".*"
+          ]
+        }
+      ]
+    }
+  },
+  "incompatibleSets": [
+    [
+      "skinlayers3d",
+      "hdskins"
+    ],
+    [
+      "optifineFabric",
+      "sodium"
+    ],
+    [
+      "optifineFabric",
+      "lithium"
+    ],
+    [
+      "irisShaders",
+      "optifineFabric"
+    ]
+  ],
+  "requirements": {
+    "irisShaders": [
+      "sodium"
+    ]
+  }
+}
