@@ -177,6 +177,67 @@ $vi = 'https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/index
 [Environment]::SetEnvironmentVariable('VERSION_INDEX', $vi, 'User')
 Say "  [+] version list source -> $vi" 'Green'
 
+# ---- Carry your per-version mods over to the "-feather" / "-dawn" version names ----
+# Versions are now listed as e.g. 1.21.8-feather (original Feather client) and 1.21.8-dawn. The launcher
+# keys mod selections and custom mod folders by version name, so copy them (never move or delete).
+$featherVersions = @('1.8.9','1.12.2','1.17.1','1.18.2','1.19','1.19.2','1.19.3','1.19.4','1.20','1.20.1',
+    '1.20.2','1.20.4','1.20.6','1.21','1.21.1','1.21.3','1.21.4','1.21.5','1.21.7','1.21.8','1.21.10',
+    '1.21.11','26.1','26.1.1','26.1.2','26.2')
+function Get-NewVersionName([string]$n) {
+    if ($n -match '^(.+)-dawn-forge$') { return "$($Matches[1])-dawn" }
+    if ($n -match '-(feather|dawn)(-|$)') { return $null }
+    if ($n -match '^([\d.]+)-fabric$') {
+        if ($featherVersions -contains $Matches[1]) { return "$($Matches[1])-feather-fabric" }
+        return "$($Matches[1])-dawn-fabric"
+    }
+    if ($n -match '^[\d.]+$') {   # legacy names, and versionToLaunch (stored without "-fabric")
+        if ($featherVersions -contains $n) { return "$n-feather" }
+        return "$n-dawn"
+    }
+    return $null
+}
+$moved = 0
+$modsFile = Join-Path $env:APPDATA '.feather\mods\feather-mods.json'
+if (Test-Path $modsFile) {
+    $mj = Get-Content $modsFile -Raw | ConvertFrom-Json
+    foreach ($sec in 'addedMods','customAddedMods','modrinthAddedMods','profiles') {
+        $o = $mj.$sec
+        if (-not $o) { continue }
+        foreach ($p in @($o.PSObject.Properties)) {
+            $new = Get-NewVersionName $p.Name
+            if ($new -and -not $o.PSObject.Properties[$new]) {
+                $o | Add-Member -NotePropertyName $new -NotePropertyValue $p.Value; $moved++
+            }
+        }
+    }
+    $sv = Get-NewVersionName ([string]$mj.selectedVersion)
+    if ($sv) { $mj.selectedVersion = $sv }
+    if ($moved -gt 0 -or $sv) {
+        if (-not (Test-Path "$modsFile.featherfix.bak")) { Copy-Item $modsFile "$modsFile.featherfix.bak" }
+        [System.IO.File]::WriteAllText($modsFile, ($mj | ConvertTo-Json -Depth 32 -Compress))
+    }
+}
+$userMods = Join-Path $env:APPDATA '.feather\user-mods'
+if (Test-Path $userMods) {
+    foreach ($d in Get-ChildItem $userMods -Directory) {
+        $new = Get-NewVersionName $d.Name
+        if ($new -and -not (Test-Path (Join-Path $userMods $new))) {
+            Copy-Item $d.FullName (Join-Path $userMods $new) -Recurse; $moved++
+        }
+    }
+}
+$setFile = Join-Path $env:APPDATA '.feather\settings.json'
+if (Test-Path $setFile) {
+    $sj = Get-Content $setFile -Raw | ConvertFrom-Json
+    $vl = Get-NewVersionName ([string]$sj.versionToLaunch)
+    if ($vl) {
+        $sj.versionToLaunch = $vl
+        [System.IO.File]::WriteAllText($setFile, ($sj | ConvertTo-Json -Depth 8 -Compress))
+    }
+}
+if ($moved -gt 0) { Say "  [+] copied your mods to the new -feather / -dawn version names ($moved)" 'Green' }
+else { Say "  [=] mods on the new -feather / -dawn version names (nothing to copy)" 'DarkGray' }
+
 Say "`nDone. Feather is patched - it will stay Feather (no Dawn update, no ads)." 'Cyan'
 Say "Open it normally; press Ctrl+Shift+I for DevTools.`n" 'Cyan'
 Read-Host "Press Enter to exit"

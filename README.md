@@ -7,11 +7,12 @@ This is a small Windows script that patches the **Feather Client** launcher so i
 > [!IMPORTANT]
 > **Latest (October 2026): pick the original Feather client or Dawn's, per version.**
 >
-> - **Every version up to 26.2 is listed twice** in the version picker. `1.21.8` runs the **original Feather client** (Feather's final build), and `1.21.8-dawn` runs **Dawn's** client. Switch with one click under **Change Version**.
-> - **26.3 and newer are Dawn only.** Feather stopped at 26.2, so newer versions use Dawn's client, and they show up automatically as Dawn releases them.
+> - **Every version up to 26.2 is listed twice** in the version picker: `1.21.8-feather` runs the **original Feather client** (Feather's final build) and `1.21.8-dawn` runs **Dawn's** client. Switch with one click under **Change Version**.
+> - **26.3 and newer are Dawn only** (`26.3-dawn`, ...) and show up automatically as Dawn releases them. Feather's client can't be carried forward: its 26.2 build crashes on 26.3 because the Minecraft code it hooks into changed, and Feather's source isn't public.
+> - Both variants use the newer Fabric Loader / Fabric API that Dawn ships, and follow Dawn's updates.
 > - **No Play button / no versions?** Feather's version server (`game-launcher.feathermc.com`) was shut down. This repo now hosts the version list in [`index/`](index/), rebuilt from Dawn's public one every 6 hours, with fixes so Feather's launch engine can read it.
 >
-> **If you patched before**, download this repo again and re-run `Patch Feather.bat`. It only applies what's missing. If a version hangs on "Version Loading" right after an update, close and reopen Feather once.
+> **If you patched before**, download this repo again and re-run `Patch Feather.bat`. It only applies what's missing, and it **copies your mods** (enabled mods, Modrinth mods, custom mod files) from the old version names to the new `-feather` / `-dawn` ones. Without the re-run your versions still work, but their mod lists start empty. If a version hangs on "Version Loading" right after an update, close and reopen Feather once.
 
 ---
 
@@ -26,7 +27,8 @@ It applies these edits to your installed Feather launcher:
 - **Disables the Electron asar-integrity fuse**: required so the modified launcher is allowed to load.
 - **Restores the Minecraft version list** by setting a per-user environment variable, `VERSION_INDEX`, to this repo's auto-updated version list.
 - **Removes Feather's frozen version allow-list check**, so versions released after Feather was abandoned can be launched.
-- **Points the launcher's mod lists (`mods.json`, `modrinth.json`) at updated copies in this repo**, which add the newer versions and the `-dawn` entries. Without them those versions hang on "Version Loading".
+- **Points the launcher's mod lists (`mods.json`, `modrinth.json`) at updated copies in this repo**, which add the newer versions and the `-feather` / `-dawn` entries. Without them those versions hang on "Version Loading".
+- **Copies your per-version mods to the new version names** (a backup of `feather-mods.json` is kept as `feather-mods.json.featherfix.bak`).
 
 The launcher edits are small in-place changes to files you already have (the mod-list edit makes `app.asar` 68 bytes larger, and the script updates its file table to match). The script itself downloads nothing; Feather then fetches its version list and game files as usual.
 
@@ -34,9 +36,9 @@ The launcher edits are small in-place changes to files you already have (the mod
 
 | You pick | In-game client | Source |
 | --- | --- | --- |
-| `1.8.9` … `26.2` | Original Feather (final build) | Feather's own jars, archived at [featherarchived](https://github.com/featherarchived/builds-cf.feathercdn.net), pinned by SHA-1 in [`tools/feather_builds.json`](tools/feather_builds.json) |
-| `1.17.1-dawn` … `26.2-dawn` (and `1.8.9-dawn-forge`, `1.12.2-dawn-forge`) | Dawn | Dawn's public CDN |
-| `26.3` and newer | Dawn | Dawn's public CDN |
+| `1.8.9-feather` … `26.2-feather` | Original Feather (final build) | Feather's own jars, archived at [featherarchived](https://github.com/featherarchived/builds-cf.feathercdn.net), pinned by SHA-1 in [`tools/feather_builds.json`](tools/feather_builds.json) |
+| `1.8.9-dawn` … `26.2-dawn` | Dawn | Dawn's public CDN |
+| `26.3-dawn` and newer | Dawn | Dawn's public CDN |
 
 Minecraft itself, Fabric and the other libraries come from the usual Mojang/Fabric/Maven servers. Dawn's NeoForge builds use a newer format Feather's launcher can't read, so they're left out.
 

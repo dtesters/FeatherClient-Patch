@@ -59,8 +59,8 @@ def write_ui_configs(out_dir, version_names, aliases):
         if name not in mods["mcVersions"]:
             mods["mcVersions"].append(name)
         if name not in modrinth["mcVersions"] and "-" in name:
-            version, loader = name.split("-", 1)[0], name.rsplit("-", 1)[1]
-            modrinth["mcVersions"][name] = {"version": version, "loader": loader}
+            loader = "fabric" if name.endswith("-fabric") else "forge"  # same rule as the launcher UI
+            modrinth["mcVersions"][name] = {"version": name.split("-", 1)[0], "loader": loader}
     for fname, obj in (("mods.json", mods), ("modrinth.json", modrinth)):
         with open(os.path.join(out_dir, fname), "w") as f:
             json.dump(obj, f, separators=(",", ":"))
@@ -137,11 +137,16 @@ def to_feather(dawn, template, build, feather_name):
 
 
 def variant_names(dawn_name):
-    """Dawn's name -> (Feather's original name, name for the Dawn variant)"""
+    """Dawn's name -> (Feather's original name, Feather variant name, Dawn variant name).
+
+    The launcher's version picker shows names with "-fabric" stripped, so these read as
+    "1.21.8-feather" / "1.21.8-dawn". Legacy versions have no loader suffix (Feather called
+    1.8.9-forge plain "1.8.9"); the UI treats anything without "-fabric" as Forge.
+    """
     v, loader = dawn_name.rsplit("-", 1)
-    if loader == "forge":  # 1.8.9-forge: Feather called it plain 1.8.9
-        return v, f"{v}-dawn-forge"
-    return dawn_name, f"{v}-dawn-{loader}"
+    if loader == "forge":
+        return v, f"{v}-feather", f"{v}-dawn"
+    return dawn_name, f"{v}-feather-{loader}", f"{v}-dawn-{loader}"
 
 
 def asset_index_arg(manifest):
@@ -198,15 +203,16 @@ def main():
         if arg:
             manifest["game_assets_index"]["name"] = f"{arg}.json"
         manifest["assets_index"] = feather_assets
-        feather_name, dawn_name = variant_names(name)
-        if feather_name in builds:
-            emit(entry, feather_name, to_feather(manifest, template, builds[feather_name], feather_name))
-            emit(entry, dawn_name, manifest)
-            aliases[dawn_name] = feather_name
-            print(f"{name:20} stripped {removed}; Feather as {feather_name}, Dawn as {dawn_name}")
+        original, feather_name, dawn_name = variant_names(name)
+        # both variants share the mod entries Feather's configs list under the original name
+        aliases[dawn_name] = original
+        if original in builds:
+            emit(entry, feather_name, to_feather(manifest, template, builds[original], original))
+            aliases[feather_name] = original
+            print(f"{name:20} stripped {removed}; {feather_name} + {dawn_name}")
         else:
-            emit(entry, name, manifest)
-            print(f"{name:20} stripped {removed}; Dawn only")
+            print(f"{name:20} stripped {removed}; {dawn_name} only (no Feather build)")
+        emit(entry, dawn_name, manifest)
     index["metadata"] = kept
     with open(os.path.join(out_dir, "version_index.json"), "w") as f:
         json.dump(index, f, separators=(",", ":"))
