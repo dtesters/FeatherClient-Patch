@@ -1,5 +1,9 @@
 """Build a Feather-compatible version index from Dawn's public one.
 
+Every version up to 26.2 is listed twice: under its usual name it runs the original Feather client
+(Feather's final build, archived at featherarchived/builds-cf.feathercdn.net), and under a
+"-dawn" name it runs Dawn's. Versions released after Feather shut down are Dawn-only.
+
 Dawn re-hosts Feather's version index in the same format, but its manifests now
 include `linux-arm` native libraries, an OS value the last Feather launch engine
 doesn't know, so it refuses to parse them. This script mirrors the index and
@@ -8,10 +12,9 @@ manifests with those entries stripped and recomputes sha1/size.
 usage: build_index.py OUT_DIR BASE_URL
   OUT_DIR   folder to write version_index.json and manifests/<name>.json into
   BASE_URL  URL prefix the manifests will be served from, e.g.
-            file:///C:/Users/me/AppData/Roaming/.feather/dawn-index
             https://raw.githubusercontent.com/user/repo/main/index
 """
-import hashlib, json, os, sys, urllib.request
+import copy, hashlib, json, os, re, sys, urllib.request
 
 SOURCE = "https://api.dawn.gg/v2/deployments/game/stable/version_index.json"
 KNOWN_OS = {"windows", "windows-arm", "windows_intel_legacy", "linux", "osx", "osx-arm"}
@@ -23,17 +26,40 @@ FEATHER_ASSETS = "https://assets.feathercdn.net/feather_assets_index.json"
 # "Version Loading" and freezes the Mods tab, so republish them with Dawn's newer versions added.
 FEATHER_MODS = "https://electron-launcher.feathermc.com/mods.json"
 FEATHER_MODRINTH = "https://electron-launcher.feathermc.com/modrinth.json"
+TOOLS = os.path.dirname(os.path.abspath(__file__))
+# Feather's final client jars (release 1782267228), pinned by sha1 so the archive can't swap them.
+FEATHER_BUILDS = os.path.join(TOOLS, "feather_builds.json")
+# A real Feather final-build manifest (1.21.8): source of Feather's own natives and CEF build.
+FEATHER_TEMPLATE = os.path.join(TOOLS, "feather_template.json")
+# Libraries Dawn added on top of Feather's final build (which already shipped gg/dawn/dawn-renderer).
+DAWN_ONLY = ("gg/dawn/server-api/", "io/github/humbleui/")
 
 
-def write_ui_configs(out_dir, version_names):
+def copy_version_keys(node, src, dst):
+    """Give version `dst` the same per-version mod entries as `src`, anywhere in the config."""
+    if isinstance(node, dict):
+        if src in node and dst not in node:
+            node[dst] = copy.deepcopy(node[src])
+        for v in list(node.values()):
+            copy_version_keys(v, src, dst)
+    elif isinstance(node, list):
+        for v in node:
+            copy_version_keys(v, src, dst)
+
+
+def write_ui_configs(out_dir, version_names, aliases):
+    """aliases: {Dawn variant name: the Feather name whose mod entries it shares}"""
     mods = json.loads(fetch(FEATHER_MODS))
+    modrinth = json.loads(fetch(FEATHER_MODRINTH))
+    for dst, src in aliases.items():
+        for key in ("mods", "defaultMods", "dependencies"):
+            copy_version_keys(mods[key], src, dst)
+        copy_version_keys(modrinth["mcVersions"], src, dst)
     for name in version_names:
         if name not in mods["mcVersions"]:
             mods["mcVersions"].append(name)
-    modrinth = json.loads(fetch(FEATHER_MODRINTH))
-    for name in version_names:
         if name not in modrinth["mcVersions"] and "-" in name:
-            version, loader = name.rsplit("-", 1)
+            version, loader = name.split("-", 1)[0], name.rsplit("-", 1)[1]
             modrinth["mcVersions"][name] = {"version": version, "loader": loader}
     for fname, obj in (("mods.json", mods), ("modrinth.json", modrinth)):
         with open(os.path.join(out_dir, fname), "w") as f:
@@ -63,6 +89,61 @@ def clean(manifest):
     return removed
 
 
+def art_key(name):
+    """maven path without the version: net/digitalingot/fcef/0.1.1/fcef-0.1.1.jar -> net/digitalingot/fcef"""
+    return "/".join(name.split("/")[:-2])
+
+
+def is_client_jar(lib):
+    return bool(lib.get("feather")) and re.match(r"net/digitalingot/feather-(fabric-)?\d", lib["name"]) is not None
+
+
+def to_feather(dawn, template, build, feather_name):
+    """Turn one of Dawn's manifests back into Feather's: original client jar, natives and CEF."""
+    m = copy.deepcopy(dawn)
+    tlibs = {art_key(l["name"]): l for l in template["libraries"]}
+    tnat = {art_key(next(iter(n["natives"].values()))["name"]): n for n in template["native_libraries"]}
+
+    def lib(l):
+        k = art_key(l["name"])
+        if k.startswith(DAWN_ONLY):
+            return None
+        if is_client_jar(l):
+            # own path, so switching between the Feather and Dawn variants doesn't redownload either
+            return dict(l, name=f"net/digitalingot/feather-final/{feather_name}/feather-{feather_name}.jar", **build)
+        if k.startswith("net/digitalingot/") and k in tlibs:  # Feather's CEF build etc.
+            return copy.deepcopy(tlibs[k])
+        return l
+
+    m["libraries"] = [x for x in map(lib, m["libraries"]) if x]
+    # add back Feather's own pins that Dawn dropped (e.g. netty-codec-http 4.1.97 from 1.21.11 on)
+    have = {art_key(l["name"]) for l in m["libraries"] if l.get("feather")}
+    fabric = "knot" in m.get("main_class", "").lower()  # template is a Fabric build; legacy 1.8.9/1.12.2 keep Dawn's set
+    for k, l in tlibs.items():
+        if fabric and l.get("feather") and k not in have and not is_client_jar(l) and not k.startswith("software/bernie/"):
+            m["libraries"].append(copy.deepcopy(l))
+    m["mods"] = [x for x in map(lib, m.get("mods", [])) if x]
+    natives = []
+    for n in m["native_libraries"]:
+        k = art_key(next(iter(n["natives"].values()))["name"])
+        if k.startswith(DAWN_ONLY):
+            continue
+        natives.append(copy.deepcopy(tnat[k]) if k.startswith("net/digitalingot/") and k in tnat else n)
+    m["native_libraries"] = natives
+    swapped = sum("/feather-final/" in l["name"] for l in m["libraries"] + m["mods"])
+    if swapped != 1:
+        raise ValueError(f"expected one client jar, swapped {swapped}")
+    return m
+
+
+def variant_names(dawn_name):
+    """Dawn's name -> (Feather's original name, name for the Dawn variant)"""
+    v, loader = dawn_name.rsplit("-", 1)
+    if loader == "forge":  # 1.8.9-forge: Feather called it plain 1.8.9
+        return v, f"{v}-dawn-forge"
+    return dawn_name, f"{v}-dawn-{loader}"
+
+
 def asset_index_arg(manifest):
     args = manifest.get("minecraft_arguments") or []
     if isinstance(args, str):
@@ -82,7 +163,24 @@ def main():
         "sha1": hashlib.sha1(fetch(FEATHER_ASSETS)).hexdigest(),
         "url": FEATHER_ASSETS,
     }
-    kept = []
+    builds = json.load(open(FEATHER_BUILDS))
+    template = json.load(open(FEATHER_TEMPLATE))
+    clean(template)
+    kept, aliases = [], {}
+
+    def emit(entry, name, manifest):
+        manifest = dict(manifest, name=name)
+        data = json.dumps(manifest, separators=(",", ":")).encode()
+        with open(os.path.join(out_dir, "manifests", f"{name}.json"), "wb") as f:
+            f.write(data)
+        e = copy.deepcopy(entry)
+        e["name"] = name
+        e["download_size"] = len(data)
+        e["info"]["name"] = f"{name}.json"  # the engine caches the manifest under this file name
+        e["info"]["sha1"] = hashlib.sha1(data).hexdigest()
+        e["info"]["url"] = f"{base}/manifests/{name}.json"
+        kept.append(e)
+
     for entry in index["metadata"]:
         name = entry["name"]
         raw = fetch(entry["info"]["url"])
@@ -100,18 +198,19 @@ def main():
         if arg:
             manifest["game_assets_index"]["name"] = f"{arg}.json"
         manifest["assets_index"] = feather_assets
-        data = json.dumps(manifest, separators=(",", ":")).encode()
-        with open(os.path.join(out_dir, "manifests", f"{name}.json"), "wb") as f:
-            f.write(data)
-        entry["download_size"] = len(data)
-        entry["info"]["sha1"] = hashlib.sha1(data).hexdigest()
-        entry["info"]["url"] = f"{base}/manifests/{name}.json"
-        kept.append(entry)
-        print(f"{name:20} stripped {removed}")
+        feather_name, dawn_name = variant_names(name)
+        if feather_name in builds:
+            emit(entry, feather_name, to_feather(manifest, template, builds[feather_name], feather_name))
+            emit(entry, dawn_name, manifest)
+            aliases[dawn_name] = feather_name
+            print(f"{name:20} stripped {removed}; Feather as {feather_name}, Dawn as {dawn_name}")
+        else:
+            emit(entry, name, manifest)
+            print(f"{name:20} stripped {removed}; Dawn only")
     index["metadata"] = kept
     with open(os.path.join(out_dir, "version_index.json"), "w") as f:
         json.dump(index, f, separators=(",", ":"))
-    write_ui_configs(out_dir, [e["name"] for e in index["metadata"]])
+    write_ui_configs(out_dir, [e["name"] for e in index["metadata"]], aliases)
     print(f"wrote {len(index['metadata'])} versions to {out_dir}")
 
 

@@ -1,0 +1,132 @@
+{
+ "1.12.2": {
+  "sha1": "56e9b678d6fff0bea5798b0a1a2f01e3fe1340de",
+  "size": 3419627,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.12.2.jar"
+ },
+ "1.17.1-fabric": {
+  "sha1": "97de79f194401876e6ec3de8e1708b6566b58a96",
+  "size": 3776166,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.17.1-fabric.jar"
+ },
+ "1.18.2-fabric": {
+  "sha1": "3cf5416aab994f64c409a2aa6f2ac88ab5a609d5",
+  "size": 3778401,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.18.2-fabric.jar"
+ },
+ "1.19-fabric": {
+  "sha1": "72a16bcdf482275016e0160f0618b34f41c0fe4d",
+  "size": 3782029,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.19-fabric.jar"
+ },
+ "1.19.2-fabric": {
+  "sha1": "58f530c92753ff6b810dc425fe66ba387be2cd65",
+  "size": 3786437,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.19.2-fabric.jar"
+ },
+ "1.19.3-fabric": {
+  "sha1": "6679e7c8171f6cd2d6aa7579b207cb07879f1c63",
+  "size": 3791003,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.19.3-fabric.jar"
+ },
+ "1.19.4-fabric": {
+  "sha1": "8e289e6ab2a26c97959c0fca51da4b43fc85c309",
+  "size": 3797457,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.19.4-fabric.jar"
+ },
+ "1.20-fabric": {
+  "sha1": "07b1f35eecd8447af5da6226e7a189e8bbeff868",
+  "size": 3810418,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.20-fabric.jar"
+ },
+ "1.20.1-fabric": {
+  "sha1": "07b1f35eecd8447af5da6226e7a189e8bbeff868",
+  "size": 3810418,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.20.1-fabric.jar"
+ },
+ "1.20.2-fabric": {
+  "sha1": "774717fd52f3d47eb0ac798ad28f337f64dc181e",
+  "size": 3808516,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.20.2-fabric.jar"
+ },
+ "1.20.4-fabric": {
+  "sha1": "f2f7ed44de323d4e9730129553d6f6e02ea24e53",
+  "size": 3810493,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.20.4-fabric.jar"
+ },
+ "1.20.6-fabric": {
+  "sha1": "c9b41756e7991bd982b5c655d71d8001158f761a",
+  "size": 3812477,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.20.6-fabric.jar"
+ },
+ "1.21-fabric": {
+  "sha1": "d102eb938be41ad66fc43b075cd5a7bb1e9b3150",
+  "size": 3815152,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.21-fabric.jar"
+ },
+ "1.21.1-fabric": {
+  "sha1": "d102eb938be41ad66fc43b075cd5a7bb1e9b3150",
+  "size": 3815152,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.21.1-fabric.jar"
+ },
+ "1.21.10-fabric": {
+  "sha1": "b53f7d751be84e41a2fea7eff751ee3a715e1bc7",
+  "size": 6153581,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.21.10-fabric.jar"
+ },
+ "1.21.11-fabric": {
+  "sha1": "970260084e7fb2b7754a8318c1fb3811aa77f875",
+  "size": 6082033,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.21.11-fabric.jar"
+ },
+ "1.21.3-fabric": {
+  "sha1": "ecb19c58d02e9771ff1a0665ef2ba10d4dcdc5d7",
+  "size": 3828177,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.21.3-fabric.jar"
+ },
+ "1.21.4-fabric": {
+  "sha1": "da8bbcf70d01250ddb3278dfa7aa31ff1e70ebaa",
+  "size": 3734182,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.21.4-fabric.jar"
+ },
+ "1.21.5-fabric": {
+  "sha1": "10421a64cd996be474d979bca981c6e50b4b6ad2",
+  "size": 6021211,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.21.5-fabric.jar"
+ },
+ "1.21.7-fabric": {
+  "sha1": "6aacaff774fb19baebe45ff29d7c5951a0b21b72",
+  "size": 6105978,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.21.7-fabric.jar"
+ },
+ "1.21.8-fabric": {
+  "sha1": "6aacaff774fb19baebe45ff29d7c5951a0b21b72",
+  "size": 6105978,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.21.8-fabric.jar"
+ },
+ "1.8.9": {
+  "sha1": "cfdf5396e74391dd83cd23e25c8e567f503396d8",
+  "size": 3451093,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-1.8.9.jar"
+ },
+ "26.1-fabric": {
+  "sha1": "eafed10b7ddb6b8b5573928476d6c57dd5eae4c0",
+  "size": 6033586,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-26.1-fabric.jar"
+ },
+ "26.1.1-fabric": {
+  "sha1": "eafed10b7ddb6b8b5573928476d6c57dd5eae4c0",
+  "size": 6033586,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-26.1.1-fabric.jar"
+ },
+ "26.1.2-fabric": {
+  "sha1": "eafed10b7ddb6b8b5573928476d6c57dd5eae4c0",
+  "size": 6033586,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-26.1.2-fabric.jar"
+ },
+ "26.2-fabric": {
+  "sha1": "15f95ba52828ff6140c999c88cdaaad1b2c2be33",
+  "size": 6229961,
+  "url": "https://featherarchived.github.io/builds-cf.feathercdn.net/release/1782267228/feather-26.2-fabric.jar"
+ }
+}
