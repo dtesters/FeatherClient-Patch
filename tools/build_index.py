@@ -19,6 +19,25 @@ KNOWN_OS = {"windows", "windows-arm", "windows_intel_legacy", "linux", "osx", "o
 # from assets.feathercdn.net/<name>. Dawn's index lists cosmetics that exist only on Dawn's CDN,
 # which 404 there and stall the download forever, so use Feather's own (still live) asset index.
 FEATHER_ASSETS = "https://assets.feathercdn.net/feather_assets_index.json"
+# The launcher UI also loads these frozen configs. A version missing from them stalls
+# "Version Loading" and freezes the Mods tab, so republish them with Dawn's newer versions added.
+FEATHER_MODS = "https://electron-launcher.feathermc.com/mods.json"
+FEATHER_MODRINTH = "https://electron-launcher.feathermc.com/modrinth.json"
+
+
+def write_ui_configs(out_dir, version_names):
+    mods = json.loads(fetch(FEATHER_MODS))
+    for name in version_names:
+        if name not in mods["mcVersions"]:
+            mods["mcVersions"].append(name)
+    modrinth = json.loads(fetch(FEATHER_MODRINTH))
+    for name in version_names:
+        if name not in modrinth["mcVersions"] and "-" in name:
+            version, loader = name.rsplit("-", 1)
+            modrinth["mcVersions"][name] = {"version": version, "loader": loader}
+    for fname, obj in (("mods.json", mods), ("modrinth.json", modrinth)):
+        with open(os.path.join(out_dir, fname), "w") as f:
+            json.dump(obj, f, separators=(",", ":"))
 
 
 def fetch(url):
@@ -70,6 +89,7 @@ def main():
         print(f"{name:20} stripped {removed}")
     with open(os.path.join(out_dir, "version_index.json"), "w") as f:
         json.dump(index, f, separators=(",", ":"))
+    write_ui_configs(out_dir, [e["name"] for e in index["metadata"]])
     print(f"wrote {len(index['metadata'])} versions to {out_dir}")
 
 
