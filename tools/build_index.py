@@ -18,9 +18,12 @@ import copy, hashlib, json, os, re, sys, urllib.request
 
 SOURCE = "https://api.dawn.gg/v2/deployments/game/stable/version_index.json"
 KNOWN_OS = {"windows", "windows-arm", "windows_intel_legacy", "linux", "osx", "osx-arm"}
-# The Feather engine reads only {hash, name} from the cosmetic asset index and always downloads
-# from assets.feathercdn.net/<name>. Dawn's index lists cosmetics that exist only on Dawn's CDN,
-# which 404 there and stall the download forever, so use Feather's own (still live) asset index.
+# The Feather engine reads only {hash, name} from the cosmetic asset index and downloads from a
+# hard-coded https://assets.feathercdn.net/<name>. Dawn's index (a superset of Feather's) lists
+# cosmetics that exist only on Dawn's CDN, which 404 there and stall the download forever.
+# Current patches rewrite that host to https://assets.dawn.gg/assets/ (same length, same paths),
+# so v2/ uses Dawn's full index. The top-level index keeps Feather's own for launchers patched
+# before that, which still download from feathercdn.
 FEATHER_ASSETS = "https://assets.feathercdn.net/feather_assets_index.json"
 # The launcher UI also loads these frozen configs. A version missing from them stalls
 # "Version Loading" and freezes the Mods tab, so republish them with Dawn's newer versions added.
@@ -161,7 +164,6 @@ def asset_index_arg(manifest):
 
 def main():
     out_dir, base = sys.argv[1], sys.argv[2].rstrip("/")
-    os.makedirs(os.path.join(out_dir, "manifests"), exist_ok=True)
     index = json.loads(fetch(SOURCE))
     feather_assets = {
         "name": "feather_assets.json",
@@ -171,20 +173,10 @@ def main():
     builds = json.load(open(FEATHER_BUILDS))
     template = json.load(open(FEATHER_TEMPLATE))
     clean(template)
-    kept, aliases = [], {}
+    versions, aliases, dawn_assets = [], {}, None
 
     def emit(entry, name, manifest):
-        manifest = dict(manifest, name=name)
-        data = json.dumps(manifest, separators=(",", ":")).encode()
-        with open(os.path.join(out_dir, "manifests", f"{name}.json"), "wb") as f:
-            f.write(data)
-        e = copy.deepcopy(entry)
-        e["name"] = name
-        e["download_size"] = len(data)
-        e["info"]["name"] = f"{name}.json"  # the engine caches the manifest under this file name
-        e["info"]["sha1"] = hashlib.sha1(data).hexdigest()
-        e["info"]["url"] = f"{base}/manifests/{name}.json"
-        kept.append(e)
+        versions.append((entry, name, dict(manifest, name=name)))
 
     for entry in index["metadata"]:
         name = entry["name"]
@@ -202,7 +194,7 @@ def main():
         arg = asset_index_arg(manifest)
         if arg:
             manifest["game_assets_index"]["name"] = f"{arg}.json"
-        manifest["assets_index"] = feather_assets
+        dawn_assets = dawn_assets or manifest["assets_index"]
         original, feather_name, dawn_name = variant_names(name)
         # both variants share the mod entries Feather's configs list under the original name
         aliases[dawn_name] = original
@@ -213,11 +205,28 @@ def main():
         else:
             print(f"{name:20} stripped {removed}; {dawn_name} only (no Feather build)")
         emit(entry, dawn_name, manifest)
-    index["metadata"] = kept
+    for sub, assets in (("", feather_assets), ("v2", dawn_assets)):
+        write_tree(os.path.join(out_dir, sub), f"{base}/{sub}".rstrip("/"), index, versions, assets)
+    write_ui_configs(out_dir, [name for _, name, _ in versions], aliases)
+    print(f"wrote {len(versions)} versions to {out_dir} (and v2/)")
+
+
+def write_tree(out_dir, base, index, versions, assets):
+    os.makedirs(os.path.join(out_dir, "manifests"), exist_ok=True)
+    metadata = []
+    for entry, name, manifest in versions:
+        data = json.dumps(dict(manifest, assets_index=assets), separators=(",", ":")).encode()
+        with open(os.path.join(out_dir, "manifests", f"{name}.json"), "wb") as f:
+            f.write(data)
+        e = copy.deepcopy(entry)
+        e["name"] = name
+        e["download_size"] = len(data)
+        e["info"]["name"] = f"{name}.json"  # the engine caches the manifest under this file name
+        e["info"]["sha1"] = hashlib.sha1(data).hexdigest()
+        e["info"]["url"] = f"{base}/manifests/{name}.json"
+        metadata.append(e)
     with open(os.path.join(out_dir, "version_index.json"), "w") as f:
-        json.dump(index, f, separators=(",", ":"))
-    write_ui_configs(out_dir, [e["name"] for e in index["metadata"]], aliases)
-    print(f"wrote {len(index['metadata'])} versions to {out_dir}")
+        json.dump(dict(index, metadata=metadata), f, separators=(",", ":"))
 
 
 if __name__ == "__main__":

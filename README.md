@@ -28,6 +28,7 @@ It applies these edits to your installed Feather launcher:
 - **Restores the Minecraft version list** by setting a per-user environment variable, `VERSION_INDEX`, to this repo's auto-updated version list.
 - **Removes Feather's frozen version allow-list check**, so versions released after Feather was abandoned can be launched.
 - **Points the launcher's mod lists (`mods.json`, `modrinth.json`) at updated copies in this repo**, which add the newer versions and the `-feather` / `-dawn` entries. Without them those versions hang on "Version Loading".
+- **Downloads cosmetics from Dawn's CDN** (`assets.dawn.gg`), which has every Feather cosmetic plus Dawn's newer ones. Without it, Dawn versions log "Failed to load image ... Cosmetic atlas doesn't exist" and show missing wings/cloaks.
 - **Copies your per-version mods to the new version names** (a backup of `feather-mods.json` is kept as `feather-mods.json.featherfix.bak`).
 
 The launcher edits are small in-place changes to files you already have (the mod-list edit makes `app.asar` 68 bytes larger, and the script updates its file table to match). The script itself downloads nothing; Feather then fetches its version list and game files as usual.
@@ -40,7 +41,7 @@ The launcher edits are small in-place changes to files you already have (the mod
 | `1.8.9-dawn` … `26.2-dawn` | Dawn | Dawn's public CDN |
 | `26.3-dawn` and newer | Dawn | Dawn's public CDN |
 
-Minecraft itself, Fabric and the other libraries come from the usual Mojang/Fabric/Maven servers. Dawn's NeoForge builds use a newer format Feather's launcher can't read, so they're left out.
+Cosmetics come from Dawn's asset CDN, which still serves all of Feather's. Minecraft itself, Fabric and the other libraries come from the usual Mojang/Fabric/Maven servers. Dawn's NeoForge builds use a newer format Feather's launcher can't read, so they're left out.
 
 ## Requirements
 

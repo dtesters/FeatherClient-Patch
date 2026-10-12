@@ -90,7 +90,12 @@ $edits = @(
      old='FEATHER_DEVTOOLS==="1"'; new='FEATHER_DEVTOOLS!=="1"'; critical=$false },
   @{ name='allow versions newer than Feather''s frozen list';
      old='const u=t.mcVersions.includes(o);return u||this.notificationService';
-     new='const u=(t.mcVersions.length,!0);return u||this.notificationService'; critical=$false }
+     new='const u=(t.mcVersions.length,!0);return u||this.notificationService'; critical=$false },
+  # The launch engine downloads cosmetics from a hard-coded host. Dawn's CDN serves every Feather
+  # cosmetic plus Dawn's newer ones at the same paths (same-length swap; the trailing NUL pins it
+  # to the engine's copy, not the UI's icon URLs).
+  @{ name='cosmetics from Dawn''s CDN (all Feather + Dawn cosmetics)';
+     old="https://assets.feathercdn.net/`0"; new="https://assets.dawn.gg/assets/`0"; critical=$false }
 )
 
 $bytesA = [System.IO.File]::ReadAllBytes($asar)
@@ -173,7 +178,8 @@ if ($applied -gt 0) { [System.IO.File]::WriteAllBytes($asar,$enc.GetBytes($textA
 # ---- Restore the version list (Feather's game-launcher.feathermc.com host was shut down) ----
 # Feather's launch engine honours the VERSION_INDEX env var. Dawn re-hosts the index, but its manifests now
 # contain 'linux-arm' entries this engine can't parse, so we use a cleaned mirror (rebuilt every 6h).
-$vi = 'https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/index/version_index.json'
+# v2 lists Dawn's full cosmetic set, which needs the cosmetics edit above (index/ is for older patches)
+$vi = 'https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/index/v2/version_index.json'
 [Environment]::SetEnvironmentVariable('VERSION_INDEX', $vi, 'User')
 Say "  [+] version list source -> $vi" 'Green'
 
