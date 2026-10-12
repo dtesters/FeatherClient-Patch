@@ -41,7 +41,9 @@ The launcher edits are small in-place changes to files you already have (the mod
 | `1.8.9-dawn` … `26.2-dawn` | Dawn | Dawn's public CDN |
 | `26.3-dawn` and newer | Dawn | Dawn's public CDN |
 
-Cosmetics come from Dawn's asset CDN, which still serves all of Feather's. Minecraft itself, Fabric and the other libraries come from the usual Mojang/Fabric/Maven servers. Dawn's NeoForge builds use a newer format Feather's launcher can't read, so they're left out.
+Cosmetics come from Dawn's asset CDN, which still serves all of Feather's.
+
+**Known limits of the `-dawn` versions:** Dawn's client gets some things from Dawn's own launcher, which isn't running here. Your head icon in Dawn's menu stays generic, cosmetic thumbnails show "?", and the "new release" store card stays empty (the log says `Cosmetic atlas doesn't exist`). The game and your equipped cosmetics work. The `-feather` versions don't have these issues. Lines like `DRM check failed` and `FieldNamingPolicy` also appear when Dawn's own launcher runs the game and can be ignored. Minecraft itself, Fabric and the other libraries come from the usual Mojang/Fabric/Maven servers. Dawn's NeoForge builds use a newer format Feather's launcher can't read, so they're left out.
 
 ## Requirements
 
