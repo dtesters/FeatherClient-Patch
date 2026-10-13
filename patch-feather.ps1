@@ -209,6 +209,24 @@ elseif ($textA.Contains($mirror[0].new)) { Say "  [=] launcher files -> repo mir
 else { Say "  [!] launcher files (not found in this build - skipped)" 'Yellow' }
 if ($applied -gt 0) { [System.IO.File]::WriteAllBytes($asar,$enc.GetBytes($textA)) }
 
+# ---- In-game menu fallback ----
+# Feather's in-game menu is a web app from mc-webapp.feathermc.com; when that host is down the menu is
+# just a Cloudflare error page. A tiny agent (agent/ in this repo, our own code) checks at game start
+# and, only if that host is down, points the menu at Feather's beta/dev web app instead.
+$agentSrc = Join-Path $PSScriptRoot 'agent\featherfix-agent.jar'
+$agentDst = Join-Path $env:APPDATA '.feather\featherfix-agent.jar'
+if (Test-Path $agentSrc) {
+    New-Item -ItemType Directory -Force (Split-Path $agentDst) | Out-Null
+    Copy-Item $agentSrc $agentDst -Force
+    $hook = @( @{ old='n=[`-Xmx${e.ram}M`,';
+                  new='n=[...(()=>{try{const p=require("path").join(process.env.APPDATA,".feather","featherfix-agent.jar");return require("fs").existsSync(p)?["-javaagent:"+p]:[]}catch{return[]}})(),`-Xmx${e.ram}M`,' } )
+    $bytesH = [System.IO.File]::ReadAllBytes($asar); $textH = $enc.GetString($bytesH)
+    $hooked = Edit-AsarResize $textH $hook
+    if ($null -ne $hooked) { [System.IO.File]::WriteAllBytes($asar,$enc.GetBytes($hooked)); Say "  [+] in-game menu fallback (agent installed)" 'Green' }
+    elseif ($textH.Contains('featherfix-agent.jar')) { Say "  [=] in-game menu fallback (agent updated)" 'DarkGray' }
+    else { Say "  [!] in-game menu fallback (launch code not found - skipped)" 'Yellow' }
+} else { Say "  [!] in-game menu fallback (agent\featherfix-agent.jar missing next to this script - skipped)" 'Yellow' }
+
 # ---- Restore the version list (Feather's game-launcher.feathermc.com host was shut down) ----
 # Feather's launch engine honours the VERSION_INDEX env var. Dawn re-hosts the index, but its manifests now
 # contain 'linux-arm' entries this engine can't parse, so we use a cleaned mirror (rebuilt every 6h).
