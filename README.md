@@ -1,120 +1,161 @@
+<div align="center">
+
 # Feather Client Patch
 
-This is a small Windows script that patches the **Feather Client** launcher so it keeps working as **Feather** instead of auto-migrating to the new **"Dawn"** client. It also turns off ads and brings back the Minecraft version list that disappeared when Feather's servers were shut down.
+**Keep using Feather.** Stops the forced update to Dawn, removes ads, and brings back the version list,<br>
+mods and in-game menu that broke when Feather's servers were shut down.
 
-> Feather was acquired and its launcher now auto-updates itself into "Dawn". This tool stops that on a Feather install you already have (or one you reinstall from the link below).
+[![Watch the setup guide](https://img.shields.io/badge/▶%20Setup%20guide-Watch%20on%20YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=bSvNIxyM1WM)
+[![Join the Discord for support](https://img.shields.io/badge/Need%20help%3F-Join%20our%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/RBUwmddb7s)
+[![Download the patch](https://img.shields.io/badge/⬇%20Download-Patch%20(ZIP)-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dtesters/FeatherClient-Patch/archive/refs/heads/main.zip)
 
-> [!IMPORTANT]
-> **Latest (October 2026): pick the original Feather client or Dawn's, per version.**
->
-> - **Every version up to 26.2 is listed twice** in the version picker: `1.21.8-feather` runs the **original Feather client** (Feather's final build) and `1.21.8-dawn` runs **Dawn's** client. Switch with one click under **Change Version**.
-> - **26.3 and newer are Dawn only** (`26.3-dawn`, ...) and show up automatically as Dawn releases them. Feather's client can't be carried forward: its 26.2 build crashes on 26.3 because the Minecraft code it hooks into changed, and Feather's source isn't public.
-> - Both variants use the newer Fabric Loader / Fabric API that Dawn ships, and follow Dawn's updates.
-> - **No Play button / no versions?** Feather's version server (`game-launcher.feathermc.com`) was shut down. This repo now hosts the version list in [`index/`](index/), rebuilt from Dawn's public one every 6 hours, with fixes so Feather's launch engine can read it.
->
-> **If you patched before**, download this repo again and re-run `Patch Feather.bat`. It only applies what's missing, and it **copies your mods** (enabled mods, Modrinth mods, custom mod files) from the old version names to the new `-feather` / `-dawn` ones. Without the re-run your versions still work, but their mod lists start empty. If a version hangs on "Version Loading" right after an update, close and reopen Feather once.
+</div>
+
+## 🔗 Quick links
+
+| | |
+| --- | --- |
+| 🎬 **Video guide** | [How to install it, step by step (YouTube)](https://www.youtube.com/watch?v=bSvNIxyM1WM) |
+| 💬 **Support & updates** | **[Join the Discord server](https://discord.gg/RBUwmddb7s)**: ask for help, report problems, hear about fixes first |
+| ⬇️ **Download the patch** | [FeatherClient-Patch (ZIP)](https://github.com/dtesters/FeatherClient-Patch/archive/refs/heads/main.zip) |
+| 🪶 **Download Feather** (if you don't have it) | [feathermc.com/download/windows](https://feathermc.com/download/windows) |
+| 🛠️ **Something broke?** | [Troubleshooting](#-troubleshooting) · [Discord](https://discord.gg/RBUwmddb7s) |
+
+[![Setup guide video](https://img.youtube.com/vi/bSvNIxyM1WM/maxresdefault.jpg)](https://www.youtube.com/watch?v=bSvNIxyM1WM)
+
+> [!TIP]
+> **Stuck or something not working? [Join the Discord](https://discord.gg/RBUwmddb7s).** That's where fixes are announced first and where you can get help.
 
 ---
 
-## What it does
+## 🚀 Quick start
 
-It applies these edits to your installed Feather launcher:
+1. **[Download the patch](https://github.com/dtesters/FeatherClient-Patch/archive/refs/heads/main.zip)** and unzip it.
+2. Double-click **`Patch Feather.bat`**.
+   - No Feather on this PC? It asks **"Would you like to install Feather automatically?"** Press **Y** and it installs it for you.
+   - It asks **"Would you like this patch to update itself automatically?"** Press **Y** (recommended) and you never have to download it again.
+3. Wait for **Done**, then open Feather from its **Desktop or Start Menu shortcut**.
 
-- **Blocks the auto-update to Dawn**: the launcher stops replacing itself.
-- **Disables ads**: no ad bar, no ad panel.
-- **Enables DevTools**: open with `Ctrl+Shift+I`.
-- **Sets the copyright year in the launcher's footer to 2026**: cosmetic text only.
-- **Disables the Electron asar-integrity fuse**: required so the modified launcher is allowed to load.
-- **Restores the Minecraft version list** by setting a per-user environment variable, `VERSION_INDEX`, to this repo's auto-updated version list.
-- **Removes Feather's frozen version allow-list check**, so versions released after Feather was abandoned can be launched.
-- **Points the launcher's mod lists (`mods.json`, `modrinth.json`) at updated copies in this repo**, which add the newer versions and the `-feather` / `-dawn` entries. Without them those versions hang on "Version Loading".
-- **Downloads cosmetics from Dawn's CDN** (`assets.dawn.gg`), which has every Feather cosmetic plus Dawn's newer ones. Without it, Dawn versions log "Failed to load image ... Cosmetic atlas doesn't exist" and show missing wings/cloaks.
-- **Loads the launcher's language, background and server-list files from this repo's mirror** (`mirror/electron-launcher/`). The launcher can't get past its splash screen without the language files, so this keeps it starting if Feather's `electron-launcher` server goes away. The mirror keeps the last good copy of each file.
-- **Makes mods work on the `-feather` / `-dawn` names:** custom mod uploads and your existing custom mods (the launcher only read `user-mods` folders named like `26.1` or `26.1-fabric`), Modrinth browsing and updates (it searched Modrinth for game version "26.3-dawn"), and the incompatible-mod checks.
-- **Keeps the in-game menu working if Feather's web menu server is down.** Feather's in-game menu is a web app from `mc-webapp.feathermc.com`; when that's down, the game shows a Cloudflare "Connection timed out" page. A tiny agent ([`agent/`](agent/), our own code) checks at game start and, only then, uses Feather's own beta web app instead.
-- **Copies your per-version mods to the new version names** (a backup of `feather-mods.json` is kept as `feather-mods.json.featherfix.bak`).
+No administrator rights needed. Safe to run again any time: it only applies what's missing.
 
-The launcher edits are small in-place changes to files you already have (the mod-list edit makes `app.asar` 68 bytes larger, and the script updates its file table to match). The script itself downloads nothing; Feather then fetches its version list and game files as usual.
+## ✨ What you get
 
-### Where the game files come from
+- **No forced update to Dawn**, and **no ads**.
+- **All versions back**, each listed twice so you can pick the client:
 
-| You pick | In-game client | Source |
-| --- | --- | --- |
-| `1.8.9-feather` … `26.2-feather` | Original Feather (final build) | Feather's own jars, archived at [featherarchived](https://github.com/featherarchived/builds-cf.feathercdn.net), pinned by SHA-1 in [`tools/feather_builds.json`](tools/feather_builds.json) |
-| `1.8.9-dawn` … `26.2-dawn` | Dawn | Dawn's public CDN |
-| `26.3-dawn` and newer | Dawn | Dawn's public CDN |
+  | You pick | In-game client |
+  | --- | --- |
+  | `1.21.8-feather` (1.8.9 … 26.2) | the **original Feather client** (its final build) |
+  | `1.21.8-dawn` (1.8.9 … 26.2) | **Dawn's** client |
+  | `26.3-dawn` and newer | **Dawn's** client: Feather stopped at 26.2, new versions appear automatically |
 
-Cosmetics come from Dawn's asset CDN, which still serves all of Feather's.
+- **Mods work**: Feather mods, Modrinth browsing/updates, and your own uploaded mods on every version.
+- **The in-game Feather menu works** even while Feather's menu server is down.
+- **Cosmetics** load from Dawn's CDN, which still has every Feather cosmetic plus Dawn's newer ones.
+- **DevTools** with `Ctrl+Shift+I`.
 
-**Known limits of the `-dawn` versions:** Dawn's client gets some things from Dawn's own launcher, which isn't running here. Your head icon in Dawn's menu stays generic, cosmetic thumbnails show "?", and the "new release" store card stays empty (the log says `Cosmetic atlas doesn't exist`). The game itself runs fine. The `-feather` versions don't have these issues. Lines like `DRM check failed` and `FieldNamingPolicy` also appear when Dawn's own launcher runs the game and can be ignored. Minecraft itself, Fabric and the other libraries come from the usual Mojang/Fabric/Maven servers. Dawn's NeoForge builds use a newer format Feather's launcher can't read, so they're left out.
+## 🔄 Auto-update
 
-## Requirements
+Feather keeps losing servers, and every fix used to mean downloading the patch again. Now you run it once:
 
-- Windows
-- Feather installed at `%LOCALAPPDATA%\Programs\feather` (see the next section if it isn't)
+- When you open Feather from its **Desktop / Start Menu shortcut**, it quietly checks this repo. If there's a newer patch, it applies it, then starts Feather. Usually that adds about a second; an actual update takes a few more.
+- It **never touches a running Feather or game**. If Feather is already open, the update waits until next time.
+- Version lists, mod lists and other data fixes are live for everyone immediately, with no update needed.
+- The log is at `%APPDATA%\.feather\featherfix\update.log`.
+
+To turn it off, run the patch again and press **N** when it asks about auto-update. Without auto-update, download and run the patch again whenever there's a fix.
+
+> [!NOTE]
+> Opening Feather from a **taskbar pin** made before patching skips the check. Re-pin it from the Start Menu shortcut.
+
+## 🧰 Troubleshooting
+
+| Problem | Fix |
+| --- | --- |
+| A version hangs on **"Version Loading"** right after an update | Close Feather completely and open it again. |
+| **No Play button / no versions** | Run `Patch Feather.bat` again (it sets the version list source). |
+| In-game menu shows **"Connection timed out" (Cloudflare 522)** | Run the latest patch (or open Feather from its shortcut so it auto-updates). |
+| Game won't start: **"Error opening zip file … javaagent"** | Fixed in patch 2026.10.14 (usernames with a space). Update the patch. |
+| Antivirus warns about `Feather Launcher.exe` | Expected for a patched app: allow/restore it in your antivirus, then re-run the patch (details under **Safety** below). |
+| Mods missing after updating | Re-run the patch: it copies your mods to the new version names. |
+| Anything else | **[Ask on Discord](https://discord.gg/RBUwmddb7s)**, ideally with the launcher log (log window → Copy Logs). |
 
 ## Don't have Feather (anymore)?
 
-The official download link still serves the last Feather launcher (2.6.13, ~128 MB):
+The patch can install it for you (press **Y** when asked). It uses the installer Feather's updater left on your PC if there is one, otherwise it downloads it from **https://feathermc.com/download/windows** (2.6.13, ~128 MB), and only runs it if the file matches the hash below.
 
-**https://feathermc.com/download/windows**
-
-Alternatively, Feather's updater may have left a cached copy at `%LOCALAPPDATA%\feather-updater\installer.exe` (ignore the small `dawn.exe` in the `pending` subfolder; that one is Dawn). Both are the same file:
+Feather's updater may also have left a copy at `%LOCALAPPDATA%\feather-updater\installer.exe` (ignore the small `dawn.exe` in `pending`; that's Dawn). Both are the same file:
 
 ```
 SHA-256  e36573f9990060e72e3083c949baa444d1bc96a192c58a9f416b7c96a2494ba0
 ```
 
-To check, run `certutil -hashfile "path\to\installer.exe" SHA256`, or right-click it → **Properties → Details** and look for **"Feather Launcher" / "Digital Ingot, Inc."**.
+Check with `certutil -hashfile "path\to\installer.exe" SHA256`. **When the installer finishes, close Feather right away if it opens**, then run the patch before using the launcher.
 
-**Important:** when the installer finishes, **close Feather right away if it opens** (or untick "Run Feather" at the end), then run this patch **before** using the launcher. Otherwise it updates itself into Dawn.
+---
 
-## How to use
+<details>
+<summary><b>🔍 What exactly the patch changes</b></summary>
 
-1. Click **Code → Download ZIP**, then unzip it.
-2. Make sure Feather is closed.
-3. Double-click **`Patch Feather.bat`** (or right-click `patch-feather.ps1` → **Run with PowerShell**).
-4. Wait for the **Done** message, then open Feather normally.
+Edits to your installed launcher (`%LOCALAPPDATA%\Programs\feather`):
 
-No administrator rights are needed. It's safe to run more than once: it detects what's already patched and won't double-apply, and it aborts without changing anything if it doesn't recognize your Feather version.
+- **Blocks the auto-update to Dawn.**
+- **Disables ads** (ad bar and ad panel).
+- **Enables DevTools** (`Ctrl+Shift+I`), sets the footer year to 2026.
+- **Disables the Electron asar-integrity fuse**, so the modified launcher is allowed to load.
+- **Version list:** sets the per-user variable `VERSION_INDEX` to this repo's list ([`index/`](index/)), rebuilt from Dawn's public one every 6 hours. Feather's own version server was shut down.
+- **Removes Feather's frozen version allow-list**, so newer versions can launch.
+- **Mod lists** (`mods.json`, `modrinth.json`) load from this repo, with the newer versions and `-feather` / `-dawn` entries.
+- **Launcher language / background / server-list files** load from this repo's [`mirror/`](mirror/) (the launcher can't get past its splash screen without them).
+- **Mods on the new version names:** custom mod folders, Modrinth search/updates/version rows and the incompatible-mod checks assumed names like `26.1-fabric`.
+- **Cosmetics** download from Dawn's CDN (same paths, plus Dawn's newer items).
+- **In-game menu fallback:** a ~4 KB Java agent ([`agent/`](agent/), our own code, source included). At game start it checks `mc-webapp.feathermc.com`; only if that's down it points the menu at Feather's own beta web app.
+- **Copies your per-version mods** to the new version names (backup: `feather-mods.json.featherfix.bak`).
+- **Auto-update:** `%APPDATA%\.feather\featherfix\` plus the Desktop / Start Menu shortcuts.
 
-## Backups & how to undo
+Where game files come from: original Feather jars from the [featherarchived](https://github.com/featherarchived/builds-cf.feathercdn.net) copy (pinned by hash in [`tools/feather_builds.json`](tools/feather_builds.json)); Dawn's client and newer versions from Dawn's public CDN; Minecraft, Fabric and libraries from the usual Mojang/Fabric/Maven servers. Dawn's NeoForge builds use a format Feather's launcher can't read, so they're left out.
 
-Before changing anything, the script backs up the originals next to them:
+</details>
+
+<details>
+<summary><b>🛡️ Safety</b></summary>
+
+- **Feather jars:** every one is pinned by hash, matching Feather's own version files. The launcher checks hashes on download; a test serving a different jar under a pinned hash was refused (`Hash check failed`) and the game never started.
+- **Auto-update** downloads `patch-feather.ps1` and `agent/featherfix-agent.jar` from this repository over HTTPS and runs them. Only use it if you trust this repo; you can turn it off (see above) and update manually instead.
+- **Antivirus note:** patching changes the launcher, so its digital signature no longer matches. Windows Defender, AVAST, etc. may warn about or quarantine `Feather Launcher.exe`. Allow/restore it (or add the folder to exclusions), then run the patch again if it was removed.
+
+</details>
+
+<details>
+<summary><b>⚠️ Known limits</b></summary>
+
+- **`-dawn` versions:** Dawn's client gets some things from Dawn's own launcher, which isn't running here: your head icon in Dawn's menu stays generic, cosmetic thumbnails show "?", and the "new release" store card stays empty (`Cosmetic atlas doesn't exist` in the log). The game itself runs fine; `-feather` versions don't have this. `DRM check failed` / `FieldNamingPolicy` log lines are normal (Dawn's own launcher shows them too).
+- **If Feather's account server shuts down:** before every launch Feather's launch engine checks a token signed by Feather's account server (`api.feathermc.com`, the engine calls this `DRM`). Without it nothing can launch, `-feather` or `-dawn`. Getting around that would mean defeating Feather's DRM, which this project doesn't do. [Prism Launcher](https://prismlauncher.org/) still runs Fabric with your own Microsoft account.
+- **What this depends on:** Dawn's public version list, the featherarchived jars, and Feather's asset/mod-list/account servers. If one moves, this repo gets updated (and auto-update brings it to you).
+
+</details>
+
+<details>
+<summary><b>↩️ Backups & how to undo</b></summary>
+
+The script backs up the originals once:
 
 ```
 %LOCALAPPDATA%\Programs\feather\Feather Launcher.exe.featherfix.bak
 %LOCALAPPDATA%\Programs\feather\resources\app.asar.featherfix.bak
 ```
 
-To revert, restore those two `.bak` files over the originals (remove the `.featherfix.bak` suffix). That brings back the stock launcher **including ads and the Dawn auto-update.**
+To revert, restore those two over the originals (remove `.featherfix.bak`). That brings back the stock launcher, **including ads and the Dawn auto-update**. Also run the patch once more and press **N** for auto-update, and `reg delete HKCU\Environment /v VERSION_INDEX /f`.
 
-To also remove the version-list setting, run `reg delete HKCU\Environment /v VERSION_INDEX /f` (without it, Feather will show no versions again).
+</details>
 
-## Antivirus note
+---
 
-Patching changes the launcher, so its digital signature no longer matches. Antivirus (Windows Defender, AVAST, etc.) may warn about or quarantine `Feather Launcher.exe`. That's expected for any patched app: allow/restore it, or add the folder to your exclusions. If it gets deleted, run the patcher again after allowing it.
+<div align="center">
 
-## Are the Feather client jars safe?
+**Questions, bugs, or just want updates? [Join the Discord](https://discord.gg/RBUwmddb7s)** · **[Watch the guide](https://www.youtube.com/watch?v=bSvNIxyM1WM)**
 
-The original Feather jars are downloaded from the [featherarchived](https://github.com/featherarchived/builds-cf.feathercdn.net) copy, but every one is pinned by hash in [`tools/feather_builds.json`](tools/feather_builds.json), and those hashes match the ones in Feather's own version files. The launcher checks the hash of everything it downloads: a test serving a different jar under a pinned hash was refused with `Hash check failed` and the game never started. If that archive changed a file, the version would fail to download rather than run something else.
-
-## What if Feather's servers shut down?
-
-Tested by pointing a copy of the launcher at unreachable addresses for every `feathermc.com` / `feathercdn.net` server:
-
-- **Fixed:** the launcher used to freeze on its splash screen without Feather's language files. It now loads them from this repo's mirror.
-- **Not fixable here:** before every launch, Feather's launch engine checks a token signed by Feather's account server (the engine calls this part `DRM`). If `api.feathermc.com` goes away, sign-in drops to guest mode and nothing can be launched, `-feather` or `-dawn`. Getting around that would mean defeating Feather's DRM, which this project doesn't do. If it happens, a launcher like [Prism Launcher](https://prismlauncher.org/) still runs Fabric with your own Microsoft account.
-
-## How long will this keep working?
-
-Launcher updates are disabled on purpose; that's what stops the Dawn takeover. The launcher itself is frozen, so this depends on a few outside things staying up:
-
-- **Dawn's public version list** (for new versions and the Dawn entries).
-- **The featherarchived copy of Feather's client jars** (for the original Feather entries).
-- **Feather's asset, mod-list and account servers**, which are still answering today.
-
-If one of those moves or gets locked, this repo has to be updated. For the latest Minecraft with full Forge/NeoForge support, a maintained launcher such as [Prism Launcher](https://prismlauncher.org/) is the safer long-term option.
+</div>
 
 ## Disclaimer
 

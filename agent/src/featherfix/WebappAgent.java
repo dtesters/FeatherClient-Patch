@@ -12,14 +12,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.ProtectionDomain;
 
-/**
- * FeatherClient-Patch web UI fallback.
- *
- * The in-game Feather menu is a web app loaded from https://mc-webapp.feathermc.com/. If that host
- * is down, the whole menu shows a Cloudflare error. This agent checks at startup and, only if the
- * release host doesn't answer, rewrites that one string constant (as Feather's classes load) to the
- * first mirror that does: Feather's own beta, then dev web app. Nothing else is touched.
- */
+/** If Feather's menu host is down, point the in-game menu at its beta/dev copy instead. */
 public final class WebappAgent {
     static final String RELEASE = "https://mc-webapp.feathermc.com/";
     static final String[] FALLBACKS = {

@@ -1,42 +1,73 @@
-# ============================================================
-#  Patch Feather - keep Feather, block the forced "Dawn" update
-#  Re-applies these edits to an EXISTING Feather install:
-#    - disable auto-update to Dawn
-#    - turn ads off
-#    - copyright year -> 2026
-#    - enable DevTools (Ctrl+Shift+I)
-#    - restore the version list + mod lists (Feather's servers are gone)
-#    - disable the Electron asar-integrity fuse (so the edits load)
-#  Safe & idempotent: backs up first, verifies the version,
-#  and aborts without changing anything if it doesn't match.
-# ============================================================
+# Patch Feather - keeps Feather working after the Dawn takeover.
+# Blocks the Dawn update, removes ads, and restores the version list, mods and in-game menu.
+# Safe to run again: it only applies what's missing. Originals are kept as *.featherfix.bak.
+# -Auto: no questions, used by the auto-updater.
+param([switch]$Auto)
+$PatchVersion = '2026.10.14.2'
 $ErrorActionPreference = 'Stop'
-function Say($m,$c='Gray'){ Write-Host $m -ForegroundColor $c }
+$ProgressPreference = 'SilentlyContinue'
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-Say "`n  Patch Feather (keep Feather, no Dawn, no ads)`n" 'Cyan'
+function Say($m,$c='Gray'){ Write-Host $m -ForegroundColor $c }
+function Finish([int]$code=0){ if (-not $Auto) { Read-Host "Press Enter to exit" | Out-Null }; exit $code }
+function Ask($q) {
+    do { $a = (Read-Host "$q Press Y for yes, N for no").Trim().ToUpper() } until ($a -eq 'Y' -or $a -eq 'N')
+    return $a -eq 'Y'
+}
+
+Say "`n  Patch Feather $PatchVersion`n" 'Cyan'
 
 $prog = Join-Path $env:LOCALAPPDATA 'Programs\feather'
 $exe  = Join-Path $prog 'Feather Launcher.exe'
 $asar = Join-Path $prog 'resources\app.asar'
 
-if (-not (Test-Path $exe) -or -not (Test-Path $asar)) {
-    Say "Feather is not installed at:" 'Red'
-    Say "  $prog" 'Red'
-    Say "`nYou've most likely already been migrated to Dawn and no longer have" 'Yellow'
-    Say "the Feather files. In that case use the FOLDER / zip version instead" 'Yellow'
-    Say "(it ships Feather itself) rather than this script.`n" 'Yellow'
-    Read-Host "Press Enter to exit"; exit 1
+# Last Feather installer (2.6.13). Anything else from that link is probably Dawn, so we refuse it.
+$installerSha = 'E36573F9990060E72E3083C949BAA444D1BC96A192C58A9F416B7C96A2494BA0'
+
+function Install-Feather {
+    $file = Join-Path $env:LOCALAPPDATA 'feather-updater\installer.exe'
+    if ((Test-Path $file) -and (Get-FileHash $file -Algorithm SHA256).Hash -eq $installerSha) {
+        Say "Found the Feather installer on this PC."
+    } else {
+        Say "Downloading Feather from feathermc.com (about 128 MB)..."
+        $file = Join-Path $env:TEMP 'FeatherLauncherSetup.exe'
+        Invoke-WebRequest -UseBasicParsing -Uri 'https://feathermc.com/download/windows' -OutFile $file
+        if ((Get-FileHash $file -Algorithm SHA256).Hash -ne $installerSha) {
+            Remove-Item $file -Force
+            Say "That download isn't the Feather installer this patch knows (it may be Dawn now). Not installing it." 'Red'
+            return $false
+        }
+    }
+    Say "Installing Feather..."
+    Start-Process -FilePath $file -ArgumentList '/S' -Wait
+    for ($i = 0; $i -lt 30 -and -not (Test-Path $asar); $i++) { Start-Sleep 1 }
+    # don't let it run before it's patched, or it updates itself into Dawn
+    Start-Sleep 3
+    Get-Process -Name 'Feather Launcher' -ErrorAction SilentlyContinue | Stop-Process -Force
+    Start-Sleep 2
+    return (Test-Path $asar)
 }
 
-# Close Feather so its files aren't locked
-Get-Process -Name 'Feather Launcher' -ErrorAction SilentlyContinue | Stop-Process -Force
-Start-Sleep -Milliseconds 600
+if (-not (Test-Path $exe) -or -not (Test-Path $asar)) {
+    if ($Auto) { Say "Feather isn't installed."; exit 1 }
+    Say "Feather isn't installed on this PC." 'Yellow'
+    if (-not (Ask "Would you like to install Feather automatically?")) {
+        Say "`nGet it from https://feathermc.com/download/windows (close it right after installing), then run this again." 'Yellow'
+        Finish 1
+    }
+    if (-not (Install-Feather)) { Say "Feather couldn't be installed." 'Red'; Finish 1 }
+    Say "Feather installed.`n" 'Green'
+}
+
+if (Get-Process -Name 'Feather Launcher' -ErrorAction SilentlyContinue) {
+    if ($Auto) { Say "Feather is running, the update will apply next time."; exit 0 }
+    Get-Process -Name 'Feather Launcher' -ErrorAction SilentlyContinue | Stop-Process -Force
+    Start-Sleep -Milliseconds 1500
+}
 
 $enc = [System.Text.Encoding]::GetEncoding(28591)   # Latin1: 1 byte = 1 char
 
-# Replace strings with different-length ones inside ONE packed file of an asar (Latin1 text in/out).
-# Rewrites the header: that file's size + SHA256 integrity, and shifts every later file's offset.
-# Returns the new text, or $null if none of the old strings are present.
+# Edit one file inside app.asar when the new text has a different length (fixes the asar header).
 function Edit-AsarResize([string]$text, $pairs) {
     $hp   = [BitConverter]::ToUInt32($enc.GetBytes($text.Substring(4,4)),0)
     $jl   = [BitConverter]::ToUInt32($enc.GetBytes($text.Substring(12,4)),0)
@@ -73,7 +104,7 @@ function Edit-AsarResize([string]$text, $pairs) {
            $data.Substring(0,$off) + $body + $data.Substring($off+$size)
 }
 
-# ---- app.asar edits (same-length ones first; the resize below rewrites the header) ----
+# Same-length edits
 $edits = @(
   @{ name='disable Dawn update';
      old='if(this.devMode){this.launcherWindowManager.window.webContents.send(YT.Update,KT.UpdateNotAvailable)';
@@ -91,11 +122,8 @@ $edits = @(
   @{ name='allow versions newer than Feather''s frozen list';
      old='const u=t.mcVersions.includes(o);return u||this.notificationService';
      new='const u=(t.mcVersions.length,!0);return u||this.notificationService'; critical=$false },
-  # Versions are named e.g. 26.1.1-feather-fabric / 26.3-dawn-fabric. The custom-mod folder watcher only
-  # accepted "<version>" or "<version>-fabric" folders, so uploads and custom mods were ignored.
   @{ name='custom mods on -feather / -dawn versions';
      old='3}){1,2}(-fabric)?$/'; new='3}){1,2}(-[a-z]+)*$/'; critical=$false },
-  # Modrinth search/updates derived the Minecraft version by stripping "-fabric" ("26.3-dawn" matched nothing).
   @{ name='Modrinth browsing on -feather / -dawn versions';
      old='[(0,_.w)(d.controls.version.value.replace("-fabric",""))]';
      new='[(0,_.w)(d.controls.version.value.split("-")[0]        )]'; critical=$false },
@@ -103,8 +131,6 @@ $edits = @(
      old='ue=(0,Ar.w)(o.replace("-fabric",""))'; new='ue=(0,Ar.w)(o.split("-")[0]        )'; critical=$false },
   @{ name='Modrinth mod updates on -feather / -dawn versions';
      old='const g=(0,Ar.w)(u.replace("-fabric",""));'; new='const g=(0,Ar.w)(u.split("-")[0]        );'; critical=$false },
-  # The Modrinth mod panel listed a row per supported game version only for "<ver>-fabric" / "<ver>" names
-  # ("No supported versions"). Match through the modrinth.json mapping {version, loader} instead.
   @{ name='Modrinth mod panel versions on -feather / -dawn versions';
      old='const s=_.loaders.includes(R.AW.Fabric)&&C.mcVersions.hasOwnProperty(h),o=_.loaders.includes("forge")&&C.mcVersions.hasOwnProperty(P);s&&l.add(h),o&&l.add(P)';
      new='for(const[k,q]of Object.entries(C.mcVersions))q.version===P&&_.loaders.includes(q.loader)&&l.add(k)                                                          '; critical=$false },
@@ -114,9 +140,6 @@ $edits = @(
      old='u=o.replace("-fabric",""),p;'; new='u=o.split("-")[0]        ,p;'; critical=$false },
   @{ name='mod compatibility checks on -feather / -dawn versions (3/3)';
      old='l=t.replace("-fabric",""),u;'; new='l=t.split("-")[0]        ,u;'; critical=$false },
-  # The launch engine downloads cosmetics from a hard-coded host. Dawn's CDN serves every Feather
-  # cosmetic plus Dawn's newer ones at the same paths (same-length swap; the trailing NUL pins it
-  # to the engine's copy, not the UI's icon URLs).
   @{ name='cosmetics from Dawn''s CDN (all Feather + Dawn cosmetics)';
      old="https://assets.feathercdn.net/`0"; new="https://assets.dawn.gg/assets/`0"; critical=$false }
 )
@@ -124,7 +147,6 @@ $edits = @(
 $bytesA = [System.IO.File]::ReadAllBytes($asar)
 $textA  = $enc.GetString($bytesA)
 
-# Validate all edits before touching anything
 $plan = @(); $anyMatch = $false
 foreach ($e in $edits) {
     if ($e.old.Length -ne $e.new.Length) { throw "internal length mismatch: $($e.name)" }
@@ -136,18 +158,17 @@ foreach ($e in $edits) {
         if ($e.critical) {
             Say "This doesn't look like a supported Feather version" 'Red'
             Say "(couldn't find: $($e.name)). Nothing was changed.`n" 'Red'
-            Read-Host "Press Enter to exit"; exit 1
+            Finish 1
         }
         $plan += @{ e=$e; state='missing' }
     }
 }
 if (-not $anyMatch) {
     Say "This doesn't look like Feather. Nothing was changed.`n" 'Red'
-    Read-Host "Press Enter to exit"; exit 1
+    Finish 1
 }
 
-# Locate + validate the Electron fuse (must be able to disable it, or the
-# modified asar won't load). Marker + 38 = the integrity-validation fuse byte.
+# Electron asar-integrity fuse (sentinel + 38)
 $bytesE = [System.IO.File]::ReadAllBytes($exe)
 $sidx   = $enc.GetString($bytesE).IndexOf('dL7pKGdnNz796PbbjQWNKmHXBZaB9tsX')
 if ($sidx -lt 0) { throw "Couldn't find the Electron fuse marker in the launcher. Nothing changed." }
@@ -155,18 +176,15 @@ $fuseOff = $sidx + 38
 $fuseVal = $bytesE[$fuseOff]
 if ($fuseVal -ne 48 -and $fuseVal -ne 49) { throw "Unexpected fuse byte ($fuseVal). Nothing changed." }
 
-# ---- Back up originals (once) ----
 if (-not (Test-Path "$exe.featherfix.bak"))  { Copy-Item $exe  "$exe.featherfix.bak"  -Force }
 if (-not (Test-Path "$asar.featherfix.bak")) { Copy-Item $asar "$asar.featherfix.bak" -Force }
 Say "Backups: *.featherfix.bak next to the originals`n" 'DarkGray'
 
-# ---- Disable the fuse FIRST (harmless on an unmodified asar) ----
 if ($fuseVal -eq 49) {
     $fs=[System.IO.File]::Open($exe,'Open','ReadWrite'); $fs.Seek($fuseOff,'Begin')|Out-Null; $fs.WriteByte(48); $fs.Close()
     Say "  [+] disabled asar-integrity fuse" 'Green'
 } else { Say "  [=] asar-integrity fuse (already off)" 'DarkGray' }
 
-# ---- Apply the asar edits ----
 $applied = 0
 foreach ($p in $plan) {
     switch ($p.state) {
@@ -180,8 +198,7 @@ if ($applied -gt 0) {
     if ($outA.Length -ne $bytesA.Length) { throw "asar size changed - restore from app.asar.featherfix.bak" }
 }
 
-# ---- Point the launcher's frozen mod lists at updated copies (these edits change the file size) ----
-# Feather's mods.json/modrinth.json stop at 26.2; newer versions hang on "Version Loading" without them.
+# Mod lists and launcher files from this repo
 $cfg = 'https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/index/'
 $resize = @(
   @{ old='"https://electron-launcher.feathermc.com/mods.json"';     new="`"${cfg}mods.json`"" },
@@ -197,9 +214,6 @@ if ($null -ne $resized) {
     Say "  [!] mod lists (not found in this build - skipped)" 'Yellow'
 }
 
-# ---- Load the launcher's other files (languages, backgrounds, server lists) from this repo's mirror ----
-# Without the language files the launcher can't even get past its splash screen, so it would die
-# with Feather's electron-launcher server. The mirror keeps the last good copy of each file.
 $mirror = @( @{ old='https://electron-launcher.feathermc.com/';
                 new='https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/mirror/electron-launcher/' } )
 $files = 0
@@ -209,35 +223,29 @@ elseif ($textA.Contains($mirror[0].new)) { Say "  [=] launcher files -> repo mir
 else { Say "  [!] launcher files (not found in this build - skipped)" 'Yellow' }
 if ($applied -gt 0) { [System.IO.File]::WriteAllBytes($asar,$enc.GetBytes($textA)) }
 
-# ---- In-game menu fallback ----
-# Feather's in-game menu is a web app from mc-webapp.feathermc.com; when that host is down the menu is
-# just a Cloudflare error page. A tiny agent (agent/ in this repo, our own code) checks at game start
-# and, only if that host is down, points the menu at Feather's beta/dev web app instead.
+# In-game menu fallback (agent/)
 $agentSrc = Join-Path $PSScriptRoot 'agent\featherfix-agent.jar'
 $agentDst = Join-Path $env:APPDATA '.feather\featherfix-agent.jar'
 if (Test-Path $agentSrc) {
     New-Item -ItemType Directory -Force (Split-Path $agentDst) | Out-Null
     Copy-Item $agentSrc $agentDst -Force
-    $hook = @( @{ old='n=[`-Xmx${e.ram}M`,';
-                  new='n=[...(()=>{try{const p=require("path").join(process.env.APPDATA,".feather","featherfix-agent.jar");return require("fs").existsSync(p)?["-javaagent:"+p]:[]}catch{return[]}})(),`-Xmx${e.ram}M`,' } )
+    # relative path: the launcher splits JVM args on spaces
+    $hookNew = 'n=[...(()=>{try{const P=require("path"),F=require("fs"),s=P.join(process.env.APPDATA,".feather","featherfix-agent.jar");if(!F.existsSync(s))return[];const d=P.join(e.mcPath,"feather");F.mkdirSync(d,{recursive:!0});F.copyFileSync(s,P.join(d,"featherfix-agent.jar"));return["-javaagent:feather/featherfix-agent.jar"]}catch{return[]}})(),`-Xmx${e.ram}M`,'
+    $hook = @(
+      @{ old='n=[...(()=>{try{const p=require("path").join(process.env.APPDATA,".feather","featherfix-agent.jar");return require("fs").existsSync(p)?["-javaagent:"+p]:[]}catch{return[]}})(),`-Xmx${e.ram}M`,'; new=$hookNew },
+      @{ old='n=[`-Xmx${e.ram}M`,'; new=$hookNew } )
     $bytesH = [System.IO.File]::ReadAllBytes($asar); $textH = $enc.GetString($bytesH)
-    $hooked = Edit-AsarResize $textH $hook
-    if ($null -ne $hooked) { [System.IO.File]::WriteAllBytes($asar,$enc.GetBytes($hooked)); Say "  [+] in-game menu fallback (agent installed)" 'Green' }
-    elseif ($textH.Contains('featherfix-agent.jar')) { Say "  [=] in-game menu fallback (agent updated)" 'DarkGray' }
+    if ($textH.Contains($hookNew)) { Say "  [=] in-game menu fallback (agent updated)" 'DarkGray' }
+    elseif ($null -ne ($hooked = Edit-AsarResize $textH $hook)) { [System.IO.File]::WriteAllBytes($asar,$enc.GetBytes($hooked)); Say "  [+] in-game menu fallback (agent installed)" 'Green' }
     else { Say "  [!] in-game menu fallback (launch code not found - skipped)" 'Yellow' }
 } else { Say "  [!] in-game menu fallback (agent\featherfix-agent.jar missing next to this script - skipped)" 'Yellow' }
 
-# ---- Restore the version list (Feather's game-launcher.feathermc.com host was shut down) ----
-# Feather's launch engine honours the VERSION_INDEX env var. Dawn re-hosts the index, but its manifests now
-# contain 'linux-arm' entries this engine can't parse, so we use a cleaned mirror (rebuilt every 6h).
-# v2 lists Dawn's full cosmetic set, which needs the cosmetics edit above (index/ is for older patches)
+# Version list
 $vi = 'https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/index/v2/version_index.json'
 [Environment]::SetEnvironmentVariable('VERSION_INDEX', $vi, 'User')
 Say "  [+] version list source -> $vi" 'Green'
 
-# ---- Carry your per-version mods over to the "-feather" / "-dawn" version names ----
-# Versions are now listed as e.g. 1.21.8-feather (original Feather client) and 1.21.8-dawn. The launcher
-# keys mod selections and custom mod folders by version name, so copy them (never move or delete).
+# Copy mods to the -feather / -dawn version names
 $featherVersions = @('1.8.9','1.12.2','1.17.1','1.18.2','1.19','1.19.2','1.19.3','1.19.4','1.20','1.20.1',
     '1.20.2','1.20.4','1.20.6','1.21','1.21.1','1.21.3','1.21.4','1.21.5','1.21.7','1.21.8','1.21.10',
     '1.21.11','26.1','26.1.1','26.1.2','26.2')
@@ -296,6 +304,70 @@ if (Test-Path $setFile) {
 if ($moved -gt 0) { Say "  [+] copied your mods to the new -feather / -dawn version names ($moved)" 'Green' }
 else { Say "  [=] mods on the new -feather / -dawn version names (nothing to copy)" 'DarkGray' }
 
-Say "`nDone. Feather is patched - it will stay Feather (no Dawn update, no ads)." 'Cyan'
-Say "Open it normally; press Ctrl+Shift+I for DevTools.`n" 'Cyan'
-Read-Host "Press Enter to exit"
+# Auto-update
+$ffDir   = Join-Path $env:APPDATA '.feather\featherfix'
+$wsh     = New-Object -ComObject WScript.Shell
+$links   = @((Join-Path ([Environment]::GetFolderPath('Desktop')) 'Feather Launcher.lnk'),
+             (Join-Path ([Environment]::GetFolderPath('Programs')) 'Feather Launcher.lnk'))
+$autoUpdate = $Auto -or (Ask "`nWould you like this patch to update itself automatically?")
+if (-not $autoUpdate) {
+    foreach ($l in $links) {
+        if (Test-Path $l) { $sc = $wsh.CreateShortcut($l); $sc.TargetPath = $exe; $sc.Arguments = ''; $sc.WorkingDirectory = $prog; $sc.Save() }
+    }
+    if (Test-Path $ffDir) { Remove-Item $ffDir -Recurse -Force }
+    Say "  [=] auto-update off: download and run the patch again to get fixes" 'DarkGray'
+} else {
+    New-Item -ItemType Directory -Force $ffDir | Out-Null
+    $updater = @'
+# FeatherClient-Patch updater, started by the Feather shortcut.
+param([switch]$Launch)
+$dir  = Split-Path -Parent $MyInvocation.MyCommand.Path
+$log  = Join-Path $dir 'update.log'
+$exe  = Join-Path $env:LOCALAPPDATA 'Programs\feather\Feather Launcher.exe'
+$repo = 'https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/'
+function Log($m) { Add-Content -Path $log -Value ("[{0}] {1}" -f (Get-Date -Format s), $m) }
+try {
+    if ((Test-Path $log) -and (Get-Item $log).Length -gt 512KB) { Remove-Item $log -Force }
+    if (Test-Path (Join-Path $dir 'disabled')) { Log 'auto-update disabled (featherfix\disabled exists)' }
+    elseif (Get-Process -Name 'Feather Launcher' -ErrorAction SilentlyContinue) { Log 'Feather is already running - not updating now' }
+    else {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $remote = (Invoke-WebRequest -UseBasicParsing -TimeoutSec 15 -Uri ($repo + 'patch-feather.ps1')).Content
+        if ($remote -notmatch "\`$PatchVersion = '([^']+)'") { throw 'no $PatchVersion in the published patch' }
+        $rv = $Matches[1]
+        $lv = if (Test-Path (Join-Path $dir 'version.txt')) { (Get-Content (Join-Path $dir 'version.txt') -Raw).Trim() } else { '' }
+        if ($rv -eq $lv) { Log "up to date ($lv)" }
+        else {
+            $tmp = Join-Path $env:TEMP ('featherfix-' + [guid]::NewGuid().ToString('N'))
+            New-Item -ItemType Directory -Force (Join-Path $tmp 'agent') | Out-Null
+            [IO.File]::WriteAllText((Join-Path $tmp 'patch-feather.ps1'), $remote)
+            Invoke-WebRequest -UseBasicParsing -TimeoutSec 30 -Uri ($repo + 'agent/featherfix-agent.jar') -OutFile (Join-Path $tmp 'agent\featherfix-agent.jar')
+            $out = & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $tmp 'patch-feather.ps1') -Auto 2>&1 | Out-String
+            Log "update $lv -> $rv (exit $LASTEXITCODE)`r`n$out"
+            Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+} catch { Log "update check failed: $($_.Exception.Message)" }
+if ($Launch -and (Test-Path $exe)) { Start-Process -FilePath $exe -WorkingDirectory (Split-Path $exe) }
+'@
+    [IO.File]::WriteAllText((Join-Path $ffDir 'featherfix-update.ps1'), $updater)
+    $vbs = 'Set f = CreateObject("Scripting.FileSystemObject")' + "`r`n" +
+           'CreateObject("WScript.Shell").Run "powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File """ & f.GetParentFolderName(WScript.ScriptFullName) & "\featherfix-update.ps1"" -Launch", 0, False' + "`r`n"
+    [IO.File]::WriteAllText((Join-Path $ffDir 'launch.vbs'), $vbs)
+    foreach ($l in $links) {
+        New-Item -ItemType Directory -Force (Split-Path $l) | Out-Null
+        $sc = $wsh.CreateShortcut($l)
+        $sc.TargetPath = Join-Path $env:WINDIR 'System32\wscript.exe'
+        $sc.Arguments = '"' + (Join-Path $ffDir 'launch.vbs') + '"'
+        $sc.WorkingDirectory = $prog
+        $sc.IconLocation = "$exe,0"
+        $sc.Description = 'Feather Launcher (auto-updates FeatherClient-Patch)'
+        $sc.Save()
+    }
+    Say "  [+] auto-update on (open Feather from its Desktop or Start Menu shortcut)" 'Green'
+}
+if ($autoUpdate) { [IO.File]::WriteAllText((Join-Path $ffDir 'version.txt'), $PatchVersion) }
+
+Say "`nDone. Feather is patched." 'Cyan'
+Say "Help and updates: https://discord.gg/RBUwmddb7s`n" 'Cyan'
+Finish 0
