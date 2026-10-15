@@ -3,7 +3,7 @@
 # Safe to run again: it only applies what's missing. Originals are kept as *.featherfix.bak.
 # -Auto: no questions, used by the auto-updater.
 param([switch]$Auto)
-$PatchVersion = '2026.10.15.2'
+$PatchVersion = '2026.10.15.3'
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -198,6 +198,14 @@ foreach ($e in $edits) {
         if ($e.critical) {
             Say "This doesn't look like a supported Feather version" 'Red'
             Say "(couldn't find: $($e.name)). Nothing was changed.`n" 'Red'
+            $userProg = Join-Path $env:LOCALAPPDATA 'Programs\feather'
+            if (-not $Auto -and $prog -ne $userProg -and (Ask "Install the supported Feather version (2.6.13) for your user and patch that?")) {
+                $prog = $userProg; $asar = Join-Path $prog 'resources\app.asar'
+                if (-not (Install-Feather)) { Say "Feather couldn't be installed." 'Red'; Finish 1 }
+                Say "Feather installed. Patching it...`n" 'Green'
+                & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $PSCommandPath
+                exit $LASTEXITCODE
+            }
             Finish 1
         }
         $plan += @{ e=$e; state='missing' }

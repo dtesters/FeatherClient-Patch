@@ -81,6 +81,7 @@ To turn it off, run the patch again and press **N** when it asks about auto-upda
 | **Dawn's own launcher opens Feather** or shows "Connection timed out" | Fixed in patch 2026.10.14.3. Update the patch, then restart Dawn. |
 | **"Unable to connect to the remote server"** while installing Feather | Your network is blocking feathermc.com. Download Feather in your browser from [feathermc.com/download/windows](https://feathermc.com/download/windows), leave it in Downloads (or put it next to the patch), and run the patch again. |
 | **"Feather isn't installed"** but it is (in `C:\Program Files\Feather Launcher`) | Fixed in patch 2026.10.15.2. Download the latest patch, run it and approve the admin prompt. |
+| **"This doesn't look like a supported Feather version"** | Your Feather is a different build. Run the latest patch and press **Y** when it offers to install the supported version (2.6.13). |
 | Anything else | **[Ask on Discord](https://discord.gg/RBUwmddb7s)**, ideally with the launcher log (log window → Copy Logs). |
 
 ## Don't have Feather (anymore)?
