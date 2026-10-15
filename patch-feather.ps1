@@ -3,7 +3,7 @@
 # Safe to run again: it only applies what's missing. Originals are kept as *.featherfix.bak.
 # -Auto: no questions, used by the auto-updater.
 param([switch]$Auto)
-$PatchVersion = '2026.10.14.4'
+$PatchVersion = '2026.10.15.1'
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -24,20 +24,41 @@ $asar = Join-Path $prog 'resources\app.asar'
 # Last Feather installer (2.6.13). Anything else from that link is probably Dawn, so we refuse it.
 $installerSha = 'E36573F9990060E72E3083C949BAA444D1BC96A192C58A9F416B7C96A2494BA0'
 
-function Install-Feather {
-    $file = Join-Path $env:LOCALAPPDATA 'feather-updater\installer.exe'
-    if ((Test-Path $file) -and (Get-FileHash $file -Algorithm SHA256).Hash -eq $installerSha) {
-        Say "Found the Feather installer on this PC."
-    } else {
-        Say "Downloading Feather from feathermc.com (about 128 MB)..."
-        $file = Join-Path $env:TEMP 'FeatherLauncherSetup.exe'
-        Invoke-WebRequest -UseBasicParsing -Uri 'https://feathermc.com/download/windows' -OutFile $file
-        if ((Get-FileHash $file -Algorithm SHA256).Hash -ne $installerSha) {
-            Remove-Item $file -Force
-            Say "That download isn't the Feather installer this patch knows (it may be Dawn now). Not installing it." 'Red'
-            return $false
-        }
+function Test-Installer($f) { (Test-Path -LiteralPath $f) -and (Get-FileHash -LiteralPath $f -Algorithm SHA256).Hash -eq $installerSha }
+
+function Get-FeatherInstaller {
+    # one already on this PC: Feather's updater cache, or a setup file next to the patch / in Downloads
+    $found = @(Join-Path $env:LOCALAPPDATA 'feather-updater\installer.exe')
+    foreach ($d in @($PSScriptRoot, (Join-Path $env:USERPROFILE 'Downloads')) | Where-Object { $_ }) {
+        $found += Get-ChildItem -LiteralPath $d -Filter '*Feather*.exe' -ErrorAction SilentlyContinue | ForEach-Object FullName
     }
+    foreach ($f in $found) { if (Test-Installer $f) { Say "Found the Feather installer: $f"; return $f } }
+
+    $file = Join-Path $env:TEMP 'FeatherLauncherSetup.exe'
+    $urls = @('https://feathermc.com/download/windows',
+              'https://launcher.feathercdn.net/dl/Feather%20Launcher%20Setup%202.6.13-c.exe')
+    Say "Downloading Feather (about 128 MB)..."
+    foreach ($u in $urls) {
+        try { Invoke-WebRequest -UseBasicParsing -Uri $u -OutFile $file } catch { }
+        if (-not (Test-Installer $file) -and (Get-Command curl.exe -ErrorAction SilentlyContinue)) {
+            try { & curl.exe -sSfL --retry 2 -o $file $u 2>$null } catch { }
+        }
+        if (Test-Installer $file) { return $file }
+    }
+    if (Test-Path $file) {
+        Remove-Item $file -Force
+        Say "The download isn't the Feather installer this patch knows (it may be Dawn now)." 'Red'
+    } else {
+        Say "Couldn't reach Feather's download server from this PC (firewall, antivirus web filter, VPN or network block)." 'Red'
+    }
+    Say "Download it in your browser from https://feathermc.com/download/windows, put it in your Downloads" 'Yellow'
+    Say "folder or next to this patch, then run the patch again." 'Yellow'
+    return $null
+}
+
+function Install-Feather {
+    $file = Get-FeatherInstaller
+    if (-not $file) { return $false }
     Say "Installing Feather..."
     Start-Process -FilePath $file -ArgumentList '/S' -Wait
     for ($i = 0; $i -lt 30 -and -not (Test-Path $asar); $i++) { Start-Sleep 1 }

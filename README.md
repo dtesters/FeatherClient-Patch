@@ -79,6 +79,7 @@ To turn it off, run the patch again and press **N** when it asks about auto-upda
 | Antivirus warns about `Feather Launcher.exe` | Expected for a patched app: allow/restore it in your antivirus, then re-run the patch (details under **Safety** below). |
 | Mods missing after updating | Re-run the patch: it copies your mods to the new version names. |
 | **Dawn's own launcher opens Feather** or shows "Connection timed out" | Fixed in patch 2026.10.14.3. Update the patch, then restart Dawn. |
+| **"Unable to connect to the remote server"** while installing Feather | Your network is blocking feathermc.com. Download Feather in your browser from [feathermc.com/download/windows](https://feathermc.com/download/windows), leave it in Downloads (or put it next to the patch), and run the patch again. |
 | Anything else | **[Ask on Discord](https://discord.gg/RBUwmddb7s)**, ideally with the launcher log (log window → Copy Logs). |
 
 ## Don't have Feather (anymore)?
