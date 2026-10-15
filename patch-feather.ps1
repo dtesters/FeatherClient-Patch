@@ -3,7 +3,7 @@
 # Safe to run again: it only applies what's missing. Originals are kept as *.featherfix.bak.
 # -Auto: no questions, used by the auto-updater.
 param([switch]$Auto)
-$PatchVersion = '2026.10.14.3'
+$PatchVersion = '2026.10.14.4'
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -66,6 +66,13 @@ if (Get-Process -Name 'Feather Launcher' -ErrorAction SilentlyContinue) {
 }
 
 $enc = [System.Text.Encoding]::GetEncoding(28591)   # Latin1: 1 byte = 1 char
+
+# Write app.asar via a temp file so an interrupted write can't leave a broken launcher
+function Save-Asar([string]$text) {
+    $tmp = "$asar.featherfix.tmp"
+    [System.IO.File]::WriteAllBytes($tmp, $enc.GetBytes($text))
+    [System.IO.File]::Replace($tmp, $asar, $null)
+}
 
 # Edit one file inside app.asar when the new text has a different length (fixes the asar header).
 function Edit-AsarResize([string]$text, $pairs) {
@@ -221,7 +228,7 @@ while ($null -ne ($resized = Edit-AsarResize $textA $mirror)) { $textA = $resize
 if ($files -gt 0) { Say "  [+] launcher files -> repo mirror ($files files)" 'Green' }
 elseif ($textA.Contains($mirror[0].new)) { Say "  [=] launcher files -> repo mirror (already done)" 'DarkGray' }
 else { Say "  [!] launcher files (not found in this build - skipped)" 'Yellow' }
-if ($applied -gt 0) { [System.IO.File]::WriteAllBytes($asar,$enc.GetBytes($textA)) }
+if ($applied -gt 0) { Save-Asar $textA }
 
 # In-game menu fallback (agent/)
 $agentSrc = Join-Path $PSScriptRoot 'agent\featherfix-agent.jar'
@@ -236,16 +243,28 @@ if (Test-Path $agentSrc) {
       @{ old='n=[`-Xmx${e.ram}M`,'; new=$hookNew } )
     $bytesH = [System.IO.File]::ReadAllBytes($asar); $textH = $enc.GetString($bytesH)
     if ($textH.Contains($hookNew)) { Say "  [=] in-game menu fallback (agent updated)" 'DarkGray' }
-    elseif ($null -ne ($hooked = Edit-AsarResize $textH $hook)) { [System.IO.File]::WriteAllBytes($asar,$enc.GetBytes($hooked)); Say "  [+] in-game menu fallback (agent installed)" 'Green' }
+    elseif ($null -ne ($hooked = Edit-AsarResize $textH $hook)) { Save-Asar $hooked; Say "  [+] in-game menu fallback (agent installed)" 'Green' }
     else { Say "  [!] in-game menu fallback (launch code not found - skipped)" 'Yellow' }
 } else { Say "  [!] in-game menu fallback (agent\featherfix-agent.jar missing next to this script - skipped)" 'Yellow' }
+
+# Client text with Feather's original wording (Dawn's asset files renamed it to Dawn)
+$repo = 'https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/'
+$mcPath = Join-Path $env:APPDATA '.minecraft'
+try { $s = Get-Content (Join-Path $env:APPDATA '.feather\settings.json') -Raw | ConvertFrom-Json; if ($s.mcPath) { $mcPath = $s.mcPath } } catch { }
+$langDir = Join-Path $mcPath 'feather\assets\game\lang'
+try {
+    $files = (Invoke-WebRequest -UseBasicParsing -TimeoutSec 20 -Uri ($repo + 'mirror/lang/files.txt')).Content -split "`r?`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ -match '^\w+\.json$' }
+    New-Item -ItemType Directory -Force $langDir | Out-Null
+    foreach ($f in $files) { Invoke-WebRequest -UseBasicParsing -TimeoutSec 20 -Uri ($repo + 'mirror/lang/' + $f) -OutFile (Join-Path $langDir $f) }
+    Say "  [+] client text ($($files.Count) languages)" 'Green'
+} catch { Say "  [!] client text (couldn't download: $($_.Exception.Message))" 'Yellow' }
 
 # Version list, set inside Feather only (Dawn's launcher reads the same variable)
 $vi = 'https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/index/v2/version_index.json'
 $viHook = @( @{ old='"use strict";var gx=Object.create;'; new='"use strict";process.env.VERSION_INDEX="' + $vi + '";var gx=Object.create;' } )
 $textV = $enc.GetString([System.IO.File]::ReadAllBytes($asar))
 if ($textV.Contains($viHook[0].new)) { Say "  [=] version list (already done)" 'DarkGray' }
-elseif ($null -ne ($hooked = Edit-AsarResize $textV $viHook)) { [System.IO.File]::WriteAllBytes($asar,$enc.GetBytes($hooked)); Say "  [+] version list" 'Green' }
+elseif ($null -ne ($hooked = Edit-AsarResize $textV $viHook)) { Save-Asar $hooked; Say "  [+] version list" 'Green' }
 else { Say "  [!] version list (not found in this build - skipped)" 'Yellow' }
 $oldVi = [Environment]::GetEnvironmentVariable('VERSION_INDEX', 'User')
 if ($oldVi -like '*FeatherClient-Patch*') {
@@ -259,7 +278,7 @@ $featherVersions = @('1.8.9','1.12.2','1.17.1','1.18.2','1.19','1.19.2','1.19.3'
     '1.21.11','26.1','26.1.1','26.1.2','26.2')
 function Get-NewVersionName([string]$n) {
     if ($n -match '^(.+)-dawn-forge$') { return "$($Matches[1])-dawn" }
-    if ($n -match '-(feather|dawn)(-|$)') { return $null }
+    if ($n -match '-(feather|dawn)(-|$)' -or $n -match '^1\.19(-fabric)?$') { return $null }
     if ($n -match '^([\d.]+)-fabric$') {
         if ($featherVersions -contains $Matches[1]) { return "$($Matches[1])-feather-fabric" }
         return "$($Matches[1])-dawn-fabric"
@@ -334,6 +353,10 @@ $log  = Join-Path $dir 'update.log'
 $exe  = Join-Path $env:LOCALAPPDATA 'Programs\feather\Feather Launcher.exe'
 $repo = 'https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/'
 function Log($m) { Add-Content -Path $log -Value ("[{0}] {1}" -f (Get-Date -Format s), $m) }
+# opening Feather twice must not patch twice at once, or start Feather mid-patch
+$lock = New-Object System.Threading.Mutex($false, 'Local\FeatherClientPatchUpdate')
+$owned = $false
+try { $owned = $lock.WaitOne(180000) } catch [System.Threading.AbandonedMutexException] { $owned = $true }
 try {
     if ((Test-Path $log) -and (Get-Item $log).Length -gt 512KB) { Remove-Item $log -Force }
     if (Test-Path (Join-Path $dir 'disabled')) { Log 'auto-update disabled (featherfix\disabled exists)' }
@@ -342,6 +365,7 @@ try {
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $remote = (Invoke-WebRequest -UseBasicParsing -TimeoutSec 15 -Uri ($repo + 'patch-feather.ps1')).Content
         if ($remote -notmatch "\`$PatchVersion = '([^']+)'") { throw 'no $PatchVersion in the published patch' }
+        if ($remote.TrimEnd() -notmatch 'Finish 0$') { throw 'incomplete download of the patch' }
         $rv = $Matches[1]
         $lv = if (Test-Path (Join-Path $dir 'version.txt')) { (Get-Content (Join-Path $dir 'version.txt') -Raw).Trim() } else { '' }
         $newer = try { [version]$rv -gt [version]$lv } catch { $rv -ne $lv }
@@ -357,6 +381,7 @@ try {
         }
     }
 } catch { Log "update check failed: $($_.Exception.Message)" }
+finally { if ($owned) { $lock.ReleaseMutex() } }
 if ($Launch -and (Test-Path $exe)) { Start-Process -FilePath $exe -WorkingDirectory (Split-Path $exe) }
 '@
     [IO.File]::WriteAllText((Join-Path $ffDir 'featherfix-update.ps1'), $updater)
