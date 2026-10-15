@@ -280,7 +280,7 @@ def build_v2_assets(out_dir, base, mirror_dir, dawn_assets):
         with open(os.path.join(lang_dir, file), "w", encoding="utf-8") as f:
             json.dump(merged, f, ensure_ascii=False, indent=1, sort_keys=True)
         names.append(file)
-    with open(os.path.join(lang_dir, "files.txt"), "w") as f:
+    with open(os.path.join(lang_dir, "files.txt"), "w", newline="\n") as f:
         f.write("\n".join(sorted(names)) + "\n")
     data = json.dumps([a for a in dawn if not a["name"].startswith("game/lang/")], separators=(",", ":")).encode()
     os.makedirs(out_dir, exist_ok=True)
