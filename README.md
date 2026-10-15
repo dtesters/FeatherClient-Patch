@@ -36,7 +36,7 @@ mods and in-game menu that broke when Feather's servers were shut down.
    - It asks **"Would you like this patch to update itself automatically?"** Press **Y** (recommended) and you never have to download it again.
 3. Wait for **Done**, then open Feather from its **Desktop or Start Menu shortcut**.
 
-No administrator rights needed. Safe to run again any time: it only applies what's missing.
+No administrator rights needed (unless Feather is installed in Program Files, then it asks once). Safe to run again any time: it only applies what's missing.
 
 ## ✨ What you get
 
@@ -80,6 +80,7 @@ To turn it off, run the patch again and press **N** when it asks about auto-upda
 | Mods missing after updating | Re-run the patch: it copies your mods to the new version names. |
 | **Dawn's own launcher opens Feather** or shows "Connection timed out" | Fixed in patch 2026.10.14.3. Update the patch, then restart Dawn. |
 | **"Unable to connect to the remote server"** while installing Feather | Your network is blocking feathermc.com. Download Feather in your browser from [feathermc.com/download/windows](https://feathermc.com/download/windows), leave it in Downloads (or put it next to the patch), and run the patch again. |
+| **"Feather isn't installed"** but it is (in `C:\Program Files\Feather Launcher`) | Fixed in patch 2026.10.15.2. Download the latest patch, run it and approve the admin prompt. |
 | Anything else | **[Ask on Discord](https://discord.gg/RBUwmddb7s)**, ideally with the launcher log (log window → Copy Logs). |
 
 ## Don't have Feather (anymore)?
