@@ -248,10 +248,45 @@ def main():
         else:
             print(f"{name:20} stripped {removed}; {dawn_name} only (no Feather build)")
         emit(entry, dawn_name, manifest)
-    for sub, assets in (("", feather_assets), ("v2", dawn_assets)):
+    v2_assets = build_v2_assets(os.path.join(out_dir, "v2"), f"{base}/v2", mirror_dir, dawn_assets)
+    for sub, assets in (("", feather_assets), ("v2", v2_assets)):
         write_tree(os.path.join(out_dir, sub), f"{base}/{sub}".rstrip("/"), index, versions, assets)
     write_ui_configs(out_dir, [name for _, name, _ in versions], aliases, launcher_mirror)
     print(f"wrote {len(versions)} versions to {out_dir} (and v2/)")
+
+
+def build_v2_assets(out_dir, base, mirror_dir, dawn_assets):
+    """Dawn's asset list without the language files, plus merged language files in mirror/lang.
+
+    Dawn rebranded the client text ("Feather" -> "Dawn") and the engine downloads every asset
+    from one CDN, so the original Feather client would show Dawn's text. The merged files keep
+    Feather's text and only add strings Feather never had; the patch installs them.
+    """
+    dawn = json.loads(fetch_or_keep(dawn_assets["url"], os.path.join(mirror_dir, "dawn_assets_index.json")))
+    with open(os.path.join(mirror_dir, "feather_assets_index.json"), "rb") as f:
+        feather = {a["name"]: a for a in json.load(f)}
+    lang_dir = os.path.join(mirror_dir, "lang")
+    names = []
+    for a in dawn:
+        if not a["name"].startswith("game/lang/"):
+            continue
+        file = a["name"].rsplit("/", 1)[1]
+        merged = json.loads(fetch_or_keep(a["url"], os.path.join(mirror_dir, "dawn-lang", file)))
+        if a["name"] in feather:
+            original = json.loads(fetch_or_keep("https://assets.feathercdn.net/" + a["name"],
+                                                os.path.join(mirror_dir, "feather-lang", file)))
+            merged = {**merged, **original}
+        os.makedirs(lang_dir, exist_ok=True)
+        with open(os.path.join(lang_dir, file), "w", encoding="utf-8") as f:
+            json.dump(merged, f, ensure_ascii=False, indent=1, sort_keys=True)
+        names.append(file)
+    with open(os.path.join(lang_dir, "files.txt"), "w") as f:
+        f.write("\n".join(sorted(names)) + "\n")
+    data = json.dumps([a for a in dawn if not a["name"].startswith("game/lang/")], separators=(",", ":")).encode()
+    os.makedirs(out_dir, exist_ok=True)
+    with open(os.path.join(out_dir, "assets_index.json"), "wb") as f:
+        f.write(data)
+    return {"name": "feather_assets.json", "sha1": hashlib.sha1(data).hexdigest(), "url": f"{base}/assets_index.json"}
 
 
 def write_tree(out_dir, base, index, versions, assets):

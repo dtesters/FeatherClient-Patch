@@ -1,0 +1,17 @@
+{
+  "feather.commands.jfr.notAvailable": "§cHindi magagamit JFR sa JVM na ito.",
+  "feather.commands.jfr.recordingStarted": "§aNagsimula na ang JFR recording sa file %s.",
+  "feather.commands.jfr.recordingStopped": "§aHuminto na ang JFR recording.",
+  "feather.commands.targetNotFound": "§cHindi mahanap na ang player.",
+  "feather.commonterm.color": "Kulay",
+  "feather.commonterm.left": "Kaliwa",
+  "feather.commonterm.right": "Kanan",
+  "feather.selection.singleplayer": "Isahang manlalaro",
+  "feather.selection.multiplayer": "Maramihang manlalaro",
+  "feather.selection.partnerServers": "Mga Server na Katuwang",
+  "featherui.itemCounter.control.color": "Kulay",
+  "featherui.partnerServer.title": "Mga Server na Katuwang",
+  "featherui.partnerServer.item.joinButtonText": "Sumali Sa Server",
+  "featherui.partnerServer.item.addToList": "Idagdag Sa Listahan Ng Server",
+  "featherui.partnerServer.sorting.recommended": "Inirerekomenda"
+}
