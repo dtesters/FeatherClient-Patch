@@ -3,7 +3,7 @@
 # Safe to run again: it only applies what's missing. Originals are kept as *.featherfix.bak.
 # -Auto: no questions, used by the auto-updater.
 param([switch]$Auto)
-$PatchVersion = '2026.10.15.1'
+$PatchVersion = '2026.10.15.2'
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -18,7 +18,19 @@ function Ask($q) {
 Say "`n  Patch Feather $PatchVersion`n" 'Cyan'
 
 $prog = Join-Path $env:LOCALAPPDATA 'Programs\feather'
+# Feather can also be installed for all users (Program Files)
+foreach ($p in @((Join-Path $env:ProgramFiles 'Feather Launcher'), (Join-Path $env:ProgramFiles 'feather'))) {
+    if (-not (Test-Path (Join-Path $prog 'Feather Launcher.exe')) -and (Test-Path (Join-Path $p 'Feather Launcher.exe'))) { $prog = $p }
+}
 $exe  = Join-Path $prog 'Feather Launcher.exe'
+# Program Files needs admin to patch
+$isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if ($prog -like "$env:ProgramFiles*" -and -not $isAdmin) {
+    if ($Auto) { Say "Feather is in Program Files; run the patch as admin to update it."; exit 0 }
+    Say "Feather is installed for all users, so the patch needs admin rights. Approve the prompt." 'Yellow'
+    Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+    exit 0
+}
 $asar = Join-Path $prog 'resources\app.asar'
 
 # Last Feather installer (2.6.13). Anything else from that link is probably Dawn, so we refuse it.
@@ -371,7 +383,7 @@ if (-not $autoUpdate) {
 param([switch]$Launch)
 $dir  = Split-Path -Parent $MyInvocation.MyCommand.Path
 $log  = Join-Path $dir 'update.log'
-$exe  = Join-Path $env:LOCALAPPDATA 'Programs\feather\Feather Launcher.exe'
+$exe  = @((Join-Path $env:LOCALAPPDATA 'Programs\feather\Feather Launcher.exe'), (Join-Path $env:ProgramFiles 'Feather Launcher\Feather Launcher.exe')) | Where-Object { Test-Path $_ } | Select-Object -First 1
 $repo = 'https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/'
 function Log($m) { Add-Content -Path $log -Value ("[{0}] {1}" -f (Get-Date -Format s), $m) }
 # opening Feather twice must not patch twice at once, or start Feather mid-patch
