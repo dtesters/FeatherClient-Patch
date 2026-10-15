@@ -3,7 +3,7 @@
 # Safe to run again: it only applies what's missing. Originals are kept as *.featherfix.bak.
 # -Auto: no questions, used by the auto-updater.
 param([switch]$Auto)
-$PatchVersion = '2026.10.14.2'
+$PatchVersion = '2026.10.14.3'
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -240,10 +240,18 @@ if (Test-Path $agentSrc) {
     else { Say "  [!] in-game menu fallback (launch code not found - skipped)" 'Yellow' }
 } else { Say "  [!] in-game menu fallback (agent\featherfix-agent.jar missing next to this script - skipped)" 'Yellow' }
 
-# Version list
+# Version list, set inside Feather only (Dawn's launcher reads the same variable)
 $vi = 'https://raw.githubusercontent.com/dtesters/FeatherClient-Patch/main/index/v2/version_index.json'
-[Environment]::SetEnvironmentVariable('VERSION_INDEX', $vi, 'User')
-Say "  [+] version list source -> $vi" 'Green'
+$viHook = @( @{ old='"use strict";var gx=Object.create;'; new='"use strict";process.env.VERSION_INDEX="' + $vi + '";var gx=Object.create;' } )
+$textV = $enc.GetString([System.IO.File]::ReadAllBytes($asar))
+if ($textV.Contains($viHook[0].new)) { Say "  [=] version list (already done)" 'DarkGray' }
+elseif ($null -ne ($hooked = Edit-AsarResize $textV $viHook)) { [System.IO.File]::WriteAllBytes($asar,$enc.GetBytes($hooked)); Say "  [+] version list" 'Green' }
+else { Say "  [!] version list (not found in this build - skipped)" 'Yellow' }
+$oldVi = [Environment]::GetEnvironmentVariable('VERSION_INDEX', 'User')
+if ($oldVi -like '*FeatherClient-Patch*') {
+    [Environment]::SetEnvironmentVariable('VERSION_INDEX', $null, 'User')
+    Say "  [+] removed the old system-wide version list setting" 'Green'
+}
 
 # Copy mods to the -feather / -dawn version names
 $featherVersions = @('1.8.9','1.12.2','1.17.1','1.18.2','1.19','1.19.2','1.19.3','1.19.4','1.20','1.20.1',
@@ -336,7 +344,8 @@ try {
         if ($remote -notmatch "\`$PatchVersion = '([^']+)'") { throw 'no $PatchVersion in the published patch' }
         $rv = $Matches[1]
         $lv = if (Test-Path (Join-Path $dir 'version.txt')) { (Get-Content (Join-Path $dir 'version.txt') -Raw).Trim() } else { '' }
-        if ($rv -eq $lv) { Log "up to date ($lv)" }
+        $newer = try { [version]$rv -gt [version]$lv } catch { $rv -ne $lv }
+        if (-not $newer) { Log "up to date ($lv)" }
         else {
             $tmp = Join-Path $env:TEMP ('featherfix-' + [guid]::NewGuid().ToString('N'))
             New-Item -ItemType Directory -Force (Join-Path $tmp 'agent') | Out-Null

@@ -78,6 +78,7 @@ To turn it off, run the patch again and press **N** when it asks about auto-upda
 | Game won't start: **"Error opening zip file … javaagent"** | Fixed in patch 2026.10.14 (usernames with a space). Update the patch. |
 | Antivirus warns about `Feather Launcher.exe` | Expected for a patched app: allow/restore it in your antivirus, then re-run the patch (details under **Safety** below). |
 | Mods missing after updating | Re-run the patch: it copies your mods to the new version names. |
+| **Dawn's own launcher opens Feather** or shows "Connection timed out" | Fixed in patch 2026.10.14.3. Update the patch, then restart Dawn. |
 | Anything else | **[Ask on Discord](https://discord.gg/RBUwmddb7s)**, ideally with the launcher log (log window → Copy Logs). |
 
 ## Don't have Feather (anymore)?
@@ -103,7 +104,7 @@ Edits to your installed launcher (`%LOCALAPPDATA%\Programs\feather`):
 - **Disables ads** (ad bar and ad panel).
 - **Enables DevTools** (`Ctrl+Shift+I`), sets the footer year to 2026.
 - **Disables the Electron asar-integrity fuse**, so the modified launcher is allowed to load.
-- **Version list:** sets the per-user variable `VERSION_INDEX` to this repo's list ([`index/`](index/)), rebuilt from Dawn's public one every 6 hours. Feather's own version server was shut down.
+- **Version list:** Feather loads this repo's list ([`index/`](index/)), rebuilt from Dawn's public one every 6 hours. Feather's own version server was shut down. It's set inside Feather only, so Dawn's launcher keeps using its own list.
 - **Removes Feather's frozen version allow-list**, so newer versions can launch.
 - **Mod lists** (`mods.json`, `modrinth.json`) load from this repo, with the newer versions and `-feather` / `-dawn` entries.
 - **Launcher language / background / server-list files** load from this repo's [`mirror/`](mirror/) (the launcher can't get past its splash screen without them).
@@ -145,7 +146,7 @@ The script backs up the originals once:
 %LOCALAPPDATA%\Programs\feather\resources\app.asar.featherfix.bak
 ```
 
-To revert, restore those two over the originals (remove `.featherfix.bak`). That brings back the stock launcher, **including ads and the Dawn auto-update**. Also run the patch once more and press **N** for auto-update, and `reg delete HKCU\Environment /v VERSION_INDEX /f`.
+To revert, restore those two over the originals (remove `.featherfix.bak`). That brings back the stock launcher, **including ads and the Dawn auto-update**. Also run the patch once more and press **N** for auto-update.
 
 </details>
 
