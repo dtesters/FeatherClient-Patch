@@ -3,7 +3,7 @@
 # Safe to run again: it only applies what's missing. Originals are kept as *.featherfix.bak.
 # -Auto: no questions, used by the auto-updater.
 param([switch]$Auto)
-$PatchVersion = '2026.10.15.3'
+$PatchVersion = '2026.10.16.1'
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -104,7 +104,8 @@ $enc = [System.Text.Encoding]::GetEncoding(28591)   # Latin1: 1 byte = 1 char
 function Save-Asar([string]$text) {
     $tmp = "$asar.featherfix.tmp"
     [System.IO.File]::WriteAllBytes($tmp, $enc.GetBytes($text))
-    [System.IO.File]::Replace($tmp, $asar, $null)
+    try { [System.IO.File]::Replace($tmp, $asar, [NullString]::Value) }
+    catch { [System.IO.File]::Copy($tmp, $asar, $true); Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }
 }
 
 # Edit one file inside app.asar when the new text has a different length (fixes the asar header).
